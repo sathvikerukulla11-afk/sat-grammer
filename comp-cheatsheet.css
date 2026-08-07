@@ -9,16 +9,38 @@
 /* --- accents -------------------------------------------------------------
    Each sheet carries one accent, set with data-accent on the page root, so
    a rule is recognisable at a glance across the index and the detail page. */
-[data-accent="blue"]   { --cs: var(--blue-600);   --cs-soft: var(--blue-50);   --cs-ring: rgba(37,99,235,.18); }
-[data-accent="violet"] { --cs: var(--violet-600); --cs-soft: var(--violet-100);--cs-ring: rgba(124,58,237,.18); }
-[data-accent="green"]  { --cs: var(--green-600);  --cs-soft: var(--green-50);  --cs-ring: rgba(5,150,105,.18); }
-[data-accent="amber"]  { --cs: var(--amber-600);  --cs-soft: var(--amber-50);  --cs-ring: rgba(217,119,6,.18); }
-[data-accent="rose"]   { --cs: var(--red-600);    --cs-soft: var(--red-50);    --cs-ring: rgba(220,38,38,.18); }
-[data-accent="teal"]   { --cs: #0d9488;           --cs-soft: #f0fdfa;          --cs-ring: rgba(13,148,136,.18); }
+[data-accent="blue"]   { --cs: var(--blue-600);   --cs-text: #1d4ed8; --cs-soft: var(--blue-50);   --cs-ring: rgba(37,99,235,.18); }
+[data-accent="violet"] { --cs: var(--violet-600); --cs-text: #6d28d9; --cs-soft: var(--violet-100);--cs-ring: rgba(124,58,237,.18); }
+[data-accent="green"]  { --cs: var(--green-600);  --cs-text: #047857; --cs-soft: var(--green-50);  --cs-ring: rgba(5,150,105,.18); }
+[data-accent="amber"]  { --cs: var(--amber-600);  --cs-text: #92400e; --cs-soft: var(--amber-50);  --cs-ring: rgba(217,119,6,.18); }
+[data-accent="rose"]   { --cs: var(--red-600);    --cs-text: #b91c1c; --cs-soft: var(--red-50);    --cs-ring: rgba(220,38,38,.18); }
+[data-accent="teal"]   { --cs: #0d9488;           --cs-text: #0f766e; --cs-soft: #f0fdfa;          --cs-ring: rgba(13,148,136,.18); }
 
+/* Dark mode.
+   The previous version used `[data-theme="dark"] [data-accent]` — a
+   DESCENDANT selector. On the detail page both attributes are set on
+   <html>, and an element cannot be its own descendant, so the override
+   never applied: the panels kept their near-white light-mode tint while
+   the text inherited dark-mode near-white. Invisible text.
+
+   Two selectors are needed: the compound one for <html> on the detail
+   page, and the descendant one for the accent set per-card on the index. */
+[data-theme="dark"][data-accent],
 [data-theme="dark"] [data-accent] {
-  --cs-soft: color-mix(in srgb, var(--cs) 14%, transparent);
+  /* A translucent wash of the accent, so tinted panels go DARKER than the
+     page rather than lighter. */
+  --cs-soft: color-mix(in srgb, var(--cs) 16%, transparent);
+  --cs-ring: color-mix(in srgb, var(--cs) 30%, transparent);
 }
+
+/* The 600-weight accents are too dim to read on a dark background, so each
+   one lightens. These all clear 4.5:1 against --bg-elevated. */
+[data-theme="dark"][data-accent="blue"],   [data-theme="dark"] [data-accent="blue"]   { --cs: #60a5fa; --cs-text: #93c5fd; }
+[data-theme="dark"][data-accent="violet"], [data-theme="dark"] [data-accent="violet"] { --cs: #a78bfa; --cs-text: #c4b5fd; }
+[data-theme="dark"][data-accent="green"],  [data-theme="dark"] [data-accent="green"]  { --cs: #34d399; --cs-text: #6ee7b7; }
+[data-theme="dark"][data-accent="amber"],  [data-theme="dark"] [data-accent="amber"]  { --cs: #fbbf24; --cs-text: #fcd34d; }
+[data-theme="dark"][data-accent="rose"],   [data-theme="dark"] [data-accent="rose"]   { --cs: #f87171; --cs-text: #fca5a5; }
+[data-theme="dark"][data-accent="teal"],   [data-theme="dark"] [data-accent="teal"]   { --cs: #2dd4bf; --cs-text: #5eead4; }
 
 /* --- index grid ---------------------------------------------------------- */
 .cs-grid {
@@ -60,6 +82,7 @@
 .cs-card:focus-visible { outline: 2px solid var(--cs, var(--brand)); outline-offset: 3px; }
 
 .cs-card__icon {
+  color: var(--text);
   display: grid; place-items: center;
   width: 52px; height: 52px;
   border-radius: var(--radius-lg);
@@ -71,7 +94,8 @@
 .cs-card__trick {
   font-size: var(--text-sm);
   font-weight: var(--weight-semi);
-  color: var(--cs, var(--brand-text));
+  /* Small text, so it uses the readable variant rather than the display one. */
+  color: var(--cs-text, var(--brand-text));
 }
 .cs-card__summary {
   font-size: var(--text-sm); color: var(--text-muted);
@@ -104,7 +128,7 @@
   font-size: var(--text-4xl);
   font-weight: var(--weight-bold);
   letter-spacing: -0.035em;
-  color: var(--cs, var(--text));
+  color: var(--cs-text, var(--text));
   margin-top: var(--space-3);
 }
 .cs-hero__sub { font-size: var(--text-lg); color: var(--text-muted); max-width: 56ch; margin-top: var(--space-2); }
@@ -154,10 +178,16 @@
 .cs-trick__line {
   font-size: var(--text-2xl);
   font-weight: var(--weight-bold);
-  color: var(--cs, var(--brand-text));
+  color: var(--cs-text, var(--brand-text));
   letter-spacing: -0.02em;
 }
-.cs-trick__detail { margin-top: var(--space-3); line-height: var(--leading-loose); }
+.cs-trick__detail {
+  margin-top: var(--space-3);
+  line-height: var(--leading-loose);
+  /* Explicit rather than inherited: this text sits on an accent-tinted
+     panel, and inheriting --text is what made it vanish in dark mode. */
+  color: var(--text);
+}
 
 /* --- examples ------------------------------------------------------------- */
 .cs-example {
@@ -285,7 +315,7 @@
   border-radius: var(--radius-xl);
   border: 2px solid var(--cs, var(--brand));
   background: var(--bg-elevated);
-  color: var(--cs, var(--brand-text));
+  color: var(--cs-text, var(--brand-text));
   font-size: var(--text-md); font-weight: var(--weight-semi);
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
@@ -329,6 +359,7 @@
 .cs-practice__head {
   padding: var(--space-4) var(--space-6);
   background: var(--cs-soft, var(--brand-subtle));
+  color: var(--text);
   font-weight: var(--weight-semi);
   display: flex; align-items: center; gap: var(--space-3);
 }

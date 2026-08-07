@@ -374,6 +374,29 @@ const CHECKS = [
     }
   },
   {
+    name: 'Leaderboard rebuilds itself',
+    needsAuth: true,
+    async run() {
+      // This one exists because the leaderboard failed silently for real.
+      // It is a precomputed snapshot, and the refresh was scheduled only
+      // through pg_cron — which this tier does not have. The table stayed
+      // empty and qualifying students were invisible, with no error
+      // anywhere to say so.
+      const { data, error } = await supabase.rpc('get_leaderboard',
+        { p_period: 'weekly', p_limit: 1 });
+      if (error?.code === '42883') {
+        return { ok: false, detail: 'get_leaderboard does not exist.',
+                 fix: 'Run supabase/migrations/0019_leaderboard_refreshes_without_cron.sql.' };
+      }
+      if (error) return { ok: false, detail: `${error.message} (${error.code})` };
+      const n = data.rows?.length ?? 0;
+      return { ok: true,
+               detail: n
+                 ? `${n} ranked this week; snapshot refreshed ${data.refreshed_at ? 'just now or recently' : 'never'}.`
+                 : 'Callable, and nobody has answered ten questions this week yet.' };
+    }
+  },
+  {
     name: 'Avatar storage bucket exists',
     async run() {
       const { data, error } = await supabase.storage.from('avatars').list('', { limit: 1 });

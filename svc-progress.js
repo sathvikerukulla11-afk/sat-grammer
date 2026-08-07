@@ -152,42 +152,22 @@ export async function getAchievements() {
 
 /* ---- Leaderboard ------------------------------------------------------ */
 
+/**
+ * The leaderboard for one period.
+ *
+ * This calls an RPC rather than reading `leaderboard_view` directly.
+ * The board is a precomputed snapshot, and something has to rebuild it —
+ * that used to be pg_cron, which is not available on every Supabase tier.
+ * On this project the refresh therefore never ran once and the table
+ * stayed empty, so qualifying students were simply invisible.
+ *
+ * The RPC rebuilds lazily when the snapshot goes stale, so the board
+ * works with no scheduler at all. It also computes the period boundary
+ * server-side, which removes a whole class of client timezone bug, and
+ * returns the caller's own row plus a reason when they are not ranked.
+ */
 export async function getLeaderboard(period = 'weekly', limit = 100) {
-  const start = periodStart(period);
-  return unwrap(
-    await supabase
-      .from('leaderboard_view')
-      .select('*')
-      .eq('period', period)
-      .eq('period_start', start)
-      .order('rank')
-      .limit(limit)
-  );
-}
-
-export async function getMyRank(period = 'weekly') {
-  const userId = store.get('user')?.id;
-  if (!userId) return null;
-  const { data } = await supabase
-    .from('leaderboard_view')
-    .select('*')
-    .eq('period', period)
-    .eq('period_start', periodStart(period))
-    .eq('user_id', userId)
-    .maybeSingle();
-  return data;
-}
-
-function periodStart(period) {
-  const now = new Date();
-  if (period === 'daily') return now.toISOString().slice(0, 10);
-  if (period === 'weekly') {
-    const day = (now.getUTCDay() + 6) % 7;             // Monday-based
-    const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - day));
-    return monday.toISOString().slice(0, 10);
-  }
-  if (period === 'monthly') {
-    return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString().slice(0, 10);
-  }
-  return '2000-01-01';
+  return unwrap(await supabase.rpc('get_leaderboard', {
+    p_period: period, p_limit: limit
+  }));
 }
