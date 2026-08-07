@@ -22,5 +22,6 @@
 @import url("comp-feedback.css") layer(components);
 @import url("comp-question.css") layer(components);
 @import url("comp-data.css")     layer(components);
+@import url("comp-cheatsheet.css") layer(components);
 
 @import url("pages.css")      layer(pages);

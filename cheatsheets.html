@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font-size="md">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Grammar Cheat Sheets — SAT Grammar Lab</title>
+<meta name="description" content="Every SAT grammar rule on one page: the rule, a memory trick, real examples, the traps, and a two-minute recap.">
+<link rel="canonical" href="https://example.com/cheatsheets.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Grammar Cheat Sheets — SAT Grammar Lab">
+<meta property="og:description" content="Every SAT grammar rule on one page: the rule, a memory trick, real examples, the traps, and a two-minute recap.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="main.css">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem('satgl.theme')||'"system"');var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.dataset.fontSize=JSON.parse(localStorage.getItem('satgl.fontSize')||'"md"');}catch(e){}})();</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<div id="site-header"></div>
+<main id="main" tabindex="-1">
+  <div class="container">
+    <div class="page-header mt-8">
+      <div>
+        <p class="eyebrow">Two minutes each</p>
+        <h1 class="page-header__title">Grammar cheat sheets</h1>
+        <p class="page-header__sub">
+          One card per rule. Read it, try the practice question, then go drill it.
+        </p>
+      </div>
+      <div class="row" id="cs-overall"></div>
+    </div>
+
+    <div class="row-wrap mb-6" role="group" aria-label="Filter cheat sheets">
+      <button class="chip" type="button" data-filter="all" aria-pressed="true">All</button>
+      <button class="chip" type="button" data-filter="todo" aria-pressed="false">Not read yet</button>
+      <button class="chip" type="button" data-filter="done" aria-pressed="false">Understood</button>
+      <button class="chip" type="button" data-filter="fav" aria-pressed="false">★ Saved</button>
+      <div class="spacer"></div>
+      <label class="visually-hidden" for="cs-search">Search rules</label>
+      <input class="input" type="search" id="cs-search" placeholder="Search rules…" style="max-width:220px">
+    </div>
+
+    <div id="cs-index" aria-live="polite">
+      <div class="cs-grid">
+        <div class="card"><div class="skeleton skeleton-text" style="height:120px"></div></div>
+        <div class="card"><div class="skeleton skeleton-text" style="height:120px"></div></div>
+        <div class="card"><div class="skeleton skeleton-text" style="height:120px"></div></div>
+      </div>
+    </div>
+  </div>
+  
+</main>
+<div id="site-footer"></div>
+<script type="module" src="page-cheatsheets.js"></script>
+</body>
+</html>

@@ -67,12 +67,16 @@
           <div class="setup-step" id="difficulty-step">
             <h2 class="setup-step__title"><span class="setup-step__num">3</span> Difficulty</h2>
             <div class="row-wrap" role="group" aria-label="Difficulty" id="difficulty-picker">
+              <button class="chip" type="button" data-difficulty="any" aria-pressed="false">Any level</button>
               <button class="chip" type="button" data-difficulty="easy" aria-pressed="false">Easy</button>
               <button class="chip" type="button" data-difficulty="medium" aria-pressed="false">Medium</button>
               <button class="chip" type="button" data-difficulty="hard" aria-pressed="false">Hard</button>
               <button class="chip" type="button" data-difficulty="expert" aria-pressed="false">Expert</button>
             </div>
-            <p class="field__help mt-2">Leave all unselected to draw from every difficulty.</p>
+            <p class="field__error mt-2" id="difficulty-error" hidden>
+              Choose a difficulty before you start.
+            </p>
+            <p class="field__help mt-2" id="difficulty-help">Pick one or more levels, or <strong>Any level</strong> to draw from all four.</p>
           </div>
 
           <div class="setup-step">

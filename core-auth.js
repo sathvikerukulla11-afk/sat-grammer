@@ -1,10 +1,15 @@
 /**
  * Authentication.
  *
- * Flow:
- *   register → Supabase sends a confirmation email → user clicks link →
- *   detectSessionInUrl exchanges the PKCE code → onAuthStateChange fires →
- *   the profile row already exists (created by the handle_new_user trigger).
+ * Flow (email confirmation disabled):
+ *   register → signUp returns a session immediately → onAuthStateChange
+ *   fires → the profile row already exists, created by the
+ *   handle_new_user trigger on auth.users.
+ *
+ * If confirmation is ever switched back on in the Supabase dashboard, the
+ * code handles it without changes: signUp returns no session, register()
+ * reports needsConfirmation, and the magic-link and password-reset paths
+ * still exchange their PKCE code via detectSessionInUrl.
  *
  * The client never decides who someone is; it only reflects the session
  * the server issued. Every authorisation check that matters is a policy.
@@ -72,6 +77,19 @@ export async function register({ email, password, username, displayName }) {
     }
   });
   if (error) throw new AppError(friendlyMessage(error), { code: error.code, cause: error });
+
+  // With email confirmation disabled, signUp already returns a session and
+  // the student is in. When it does not, try signing in immediately: if the
+  // account is usable, this gets them straight to the dashboard rather than
+  // to a dead-end "check your inbox" screen. If confirmation is still
+  // required this fails with email_not_confirmed, and we fall back to the
+  // inbox message instead of pretending something went wrong.
+  if (!data.session) {
+    const { data: signedIn } = await supabase.auth.signInWithPassword({ email, password });
+    if (signedIn?.session) {
+      return { user: signedIn.user, needsConfirmation: false };
+    }
+  }
 
   return {
     user: data.user,

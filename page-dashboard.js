@@ -54,14 +54,14 @@ getRecommendations(4)
 
 /* ---- quick actions ----------------------------------------------------- */
 render($('#quick-actions'), [
-  { href: 'practice.html?mode=adaptive&start=1', title: 'Adaptive practice',
-    desc: 'The engine picks your weakest rules.' },
-  { href: 'practice.html?mode=review&start=1', title: 'Review what you missed',
+  { href: 'practice.html?mode=adaptive', title: 'Adaptive practice',
+    desc: 'The engine picks your weakest rules — you pick the level.' },
+  { href: 'practice.html?mode=review', title: 'Review what you missed',
     desc: 'Questions you got wrong and have not fixed.' },
   { href: 'timed.html', title: 'Timed run',
     desc: 'Practice at real section pacing.' },
-  { href: 'rules.html', title: 'Study a rule',
-    desc: 'Read the explanation, then drill it.' }
+  { href: 'cheatsheets.html', title: 'Read a cheat sheet',
+    desc: 'Two minutes on one rule, then practise it.' }
 ].map((action) =>
   h('a.quick-action', { href: action.href },
     h('span.quick-action__title', {}, action.title),

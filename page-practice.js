@@ -46,6 +46,7 @@ const config = {
   mode: params.get('mode') || 'adaptive',
   ruleIds: new Set(),
   difficulties: new Set(),
+  anyDifficulty: false,
   length: CONFIG.PRACTICE.DEFAULT_LENGTH,
   excludeSeen: true,
   instantFeedback: profile.preferences?.instant_feedback ?? true
@@ -135,15 +136,48 @@ bindToggleGroup('#mode-picker .chip', (button) => {
   config.mode = button.dataset.mode;
   $('#mode-description').textContent = MODE_HELP[config.mode];
   $('#rule-step').hidden = config.mode !== 'rule';
-  $('#difficulty-step').hidden = !['mixed', 'difficulty', 'rule'].includes(config.mode);
+  // The daily challenge is a fixed set for everyone, so difficulty does not
+  // apply. Every other mode now respects the choice, adaptive included.
+  $('#difficulty-step').hidden = config.mode === 'daily';
 });
 
-bindToggleGroup('#difficulty-picker .chip', (button) => {
-  const value = button.dataset.difficulty;
-  config.difficulties.has(value)
-    ? config.difficulties.delete(value)
-    : config.difficulties.add(value);
-}, { multi: true });
+/**
+ * Difficulty is a required, explicit choice.
+ *
+ * It used to be optional — an empty selection silently meant "all levels",
+ * and the whole step was hidden for adaptive mode, which is the default.
+ * So most students never saw it and never chose. "Any level" is now a real
+ * option they have to pick, rather than something they get by not looking.
+ */
+$$('#difficulty-picker .chip').forEach((button) => {
+  button.addEventListener('click', () => {
+    const value = button.dataset.difficulty;
+
+    if (value === 'any') {
+      config.difficulties.clear();
+      config.anyDifficulty = !config.anyDifficulty;
+    } else {
+      config.anyDifficulty = false;
+      config.difficulties.has(value)
+        ? config.difficulties.delete(value)
+        : config.difficulties.add(value);
+    }
+
+    $$('#difficulty-picker .chip').forEach((chip) => {
+      const v = chip.dataset.difficulty;
+      chip.setAttribute('aria-pressed', String(
+        v === 'any' ? config.anyDifficulty : config.difficulties.has(v)));
+    });
+
+    $('#difficulty-error').hidden = true;
+    updateSummary();
+  });
+});
+
+/** True once the student has actually made a choice either way. */
+function difficultyChosen() {
+  return config.anyDifficulty || config.difficulties.size > 0;
+}
 
 bindToggleGroup('#length-picker .btn', (button) => {
   config.length = Number(button.dataset.length);
@@ -162,23 +196,30 @@ function updateSummary() {
   render($('#set-summary'), [
     ['Mode', titleCase(config.mode)],
     ['Rules', config.ruleIds.size ? `${config.ruleIds.size} selected` : 'All'],
-    ['Difficulty', config.difficulties.size ? [...config.difficulties].map(titleCase).join(', ') : 'All'],
+    ['Difficulty', config.difficulties.size
+      ? [...config.difficulties].map(titleCase).join(', ')
+      : (config.anyDifficulty ? 'Any level' : 'Not chosen yet')],
     ['Length', `${config.length} questions`],
     ['Unseen available', config.excludeSeen ? num(pool) : 'n/a — repeats allowed']
   ].flatMap(([term, value]) => [
     h('div.row-between', {}, h('dt.muted', {}, term), h('dd', {}, value))
   ]));
 
-  // Warn before the student hits an empty draw rather than after.
+  // Warn before the student hits an empty draw rather than after, and do
+  // not let them start until they have actually chosen a difficulty.
   const startBtn = $('#start-btn');
+  const needsDifficulty = config.mode !== 'daily' && !difficultyChosen();
   const short = config.excludeSeen && pool > 0 && pool < config.length;
   const empty = config.excludeSeen && pool === 0 && ['rule', 'difficulty', 'mixed'].includes(config.mode);
-  startBtn.textContent = empty
-    ? 'No unseen questions left — uncheck "skip seen"'
-    : short
-      ? `Start practicing (${pool} available)`
-      : 'Start practicing';
-  startBtn.disabled = empty;
+
+  startBtn.textContent = needsDifficulty
+    ? 'Choose a difficulty first'
+    : empty
+      ? 'No unseen questions left — uncheck "skip seen"'
+      : short
+        ? `Start practicing (${pool} available)`
+        : 'Start practicing';
+  startBtn.disabled = needsDifficulty || empty;
 }
 
 // Apply mode from the URL, then paint the summary.
@@ -186,6 +227,7 @@ $$('#mode-picker .chip').forEach((chip) =>
   chip.setAttribute('aria-pressed', String(chip.dataset.mode === config.mode)));
 $('#mode-description').textContent = MODE_HELP[config.mode] || '';
 $('#rule-step').hidden = config.mode !== 'rule';
+$('#difficulty-step').hidden = config.mode === 'daily';
 if (params.get('rule')) {
   const match = rules.find((r) => r.slug === params.get('rule'));
   if (match) {
@@ -242,6 +284,12 @@ let runner = null;
 let unbindShortcuts = null;
 
 $('#start-btn').addEventListener('click', async () => {
+  if (config.mode !== 'daily' && !difficultyChosen()) {
+    $('#difficulty-error').hidden = false;
+    $('#difficulty-picker').scrollIntoView({ block: 'center', behavior: 'smooth' });
+    return;
+  }
+
   const button = $('#start-btn');
   button.dataset.loading = 'true';
   try {
@@ -411,7 +459,7 @@ function showResults(summary) {
     h('div.row-wrap.mt-8', { style: { justifyContent: 'center' } },
       h('a.btn.btn-primary.btn-lg', { href: 'practice.html' }, 'Practice again'),
       summary.missed.length
-        ? h('a.btn.btn-lg', { href: 'practice.html?mode=review&start=1' }, 'Drill what I missed')
+        ? h('a.btn.btn-lg', { href: 'practice.html?mode=review&difficulty=any&start=1' }, 'Drill what I missed')
         : null,
       h('a.btn.btn-ghost.btn-lg', { href: 'progress.html' }, 'See my progress')));
 
@@ -440,5 +488,25 @@ if (params.get('session')) {
   const existing = await getSession(params.get('session')).catch(() => null);
   if (existing?.status === 'active') await launch(existing);
 } else if (params.get('start') === '1') {
-  $('#start-btn').click();
+  // A link may carry the difficulty, e.g. ?mode=rule&difficulty=hard&start=1.
+  const fromUrl = (params.get('difficulty') || '').split(',').filter(Boolean);
+  for (const level of fromUrl) {
+    if (level === 'any') config.anyDifficulty = true;
+    else if (CONFIG.DIFFICULTIES.includes(level)) config.difficulties.add(level);
+  }
+  $$('#difficulty-picker .chip').forEach((chip) => {
+    const v = chip.dataset.difficulty;
+    chip.setAttribute('aria-pressed', String(
+      v === 'any' ? config.anyDifficulty : config.difficulties.has(v)));
+  });
+  updateSummary();
+
+  // Only skip the setup screen when the link actually said which level to
+  // practise. Otherwise land on setup with the mode preselected, so the
+  // student makes the choice instead of having one made for them.
+  if (config.mode === 'daily' || difficultyChosen()) {
+    $('#start-btn').click();
+  } else {
+    $('#difficulty-picker').scrollIntoView({ block: 'center' });
+  }
 }

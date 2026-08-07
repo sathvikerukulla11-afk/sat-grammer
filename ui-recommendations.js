@@ -17,6 +17,21 @@ const TONE = {
   onboarding: { icon: '→', colour: 'var(--brand)'   }
 };
 
+/**
+ * Recommendation links are generated server-side and promise a one-click
+ * start. Since difficulty is now a required choice, a link that skips the
+ * setup screen has to say which level it means — otherwise the student
+ * lands on setup and the button has lied to them.
+ *
+ * Doing it here rather than in the SQL keeps the rule in one place.
+ */
+function withDifficulty(href, kind) {
+  if (!href || !href.includes('start=1') || href.includes('difficulty=')) return href;
+  // "Try a harder set" means exactly that; everything else draws from all levels.
+  const level = kind === 'level_up' ? 'hard,expert' : 'any';
+  return `${href}${href.includes('?') ? '&' : '?'}difficulty=${level}`;
+}
+
 export function recommendationCard(rec, { compact = false } = {}) {
   const tone = TONE[rec.kind] || TONE.goal;
 
@@ -31,7 +46,7 @@ export function recommendationCard(rec, { compact = false } = {}) {
       h('div', { style: { flex: '1', minWidth: '0' } },
         h('h3.card__title', {}, rec.title),
         !compact ? h('p.text-sm.muted.mt-2', {}, rec.reason) : null,
-        h('a.btn.btn-sm.btn-secondary.mt-4', { href: rec.action_href }, rec.action_label))));
+        h('a.btn.btn-sm.btn-secondary.mt-4', { href: withDifficulty(rec.action_href, rec.kind) }, rec.action_label))));
 }
 
 export function renderRecommendations(container, recs, options = {}) {

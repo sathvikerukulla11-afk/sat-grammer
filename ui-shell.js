@@ -18,6 +18,7 @@ const R = CONFIG.ROUTES;
 const path = pageUrl;
 
 const PUBLIC_NAV = [
+  { href: R.CHEATSHEETS, label: 'Cheat Sheets' },
   { href: R.RULES, label: 'Grammar Rules' },
   { href: R.LEADERBOARD, label: 'Leaderboard' }
 ];
@@ -25,6 +26,7 @@ const PUBLIC_NAV = [
 const PRIVATE_NAV = [
   { href: R.DASHBOARD, label: 'Dashboard' },
   { href: R.PRACTICE, label: 'Practice' },
+  { href: R.CHEATSHEETS, label: 'Cheat Sheets' },
   { href: R.RULES, label: 'Rules' },
   { href: R.REVIEW, label: 'Review' },
   { href: R.PROGRESS, label: 'Progress' },
@@ -161,6 +163,7 @@ function buildFooter() {
           h('ul', {},
             h('li', {}, h('a', { href: path(R.PRACTICE) }, 'Practice sets')),
             h('li', {}, h('a', { href: path(R.TIMED) }, 'Timed mode')),
+            h('li', {}, h('a', { href: path(R.CHEATSHEETS) }, 'Cheat sheets')),
             h('li', {}, h('a', { href: path(R.RULES) }, 'Grammar rules')),
             h('li', {}, h('a', { href: path(R.REVIEW) }, 'Review missed'))
           )

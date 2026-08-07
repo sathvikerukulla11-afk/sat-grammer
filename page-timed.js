@@ -29,8 +29,20 @@ const showView = (name) => {
 const config = {
   seconds: CONFIG.PRACTICE.DEFAULT_TIMED_SECONDS,
   length: 20,
-  difficulties: new Set()
+  difficulties: new Set(),
+  anyDifficulty: false
 };
+
+/** True once the student has actually made a choice either way. */
+function difficultyChosen() {
+  return config.anyDifficulty || config.difficulties.size > 0;
+}
+
+function refreshStartButton() {
+  const btn = $('#start-btn');
+  btn.disabled = !difficultyChosen();
+  btn.textContent = difficultyChosen() ? 'Start the clock' : 'Choose a difficulty first';
+}
 
 function bindGroup(selector, handler, { multi = false } = {}) {
   $$(selector).forEach((button) => button.addEventListener('click', () => {
@@ -46,10 +58,33 @@ function bindGroup(selector, handler, { multi = false } = {}) {
 
 bindGroup('#seconds-picker .btn', (b) => { config.seconds = Number(b.dataset.seconds); });
 bindGroup('#length-picker .btn', (b) => { config.length = Number(b.dataset.length); });
-bindGroup('#difficulty-picker .chip', (b) => {
-  const value = b.dataset.difficulty;
-  config.difficulties.has(value) ? config.difficulties.delete(value) : config.difficulties.add(value);
-}, { multi: true });
+// Difficulty is a required, explicit choice — "Any level" included.
+$$('#difficulty-picker .chip').forEach((button) => {
+  button.addEventListener('click', () => {
+    const value = button.dataset.difficulty;
+
+    if (value === 'any') {
+      config.difficulties.clear();
+      config.anyDifficulty = !config.anyDifficulty;
+    } else {
+      config.anyDifficulty = false;
+      config.difficulties.has(value)
+        ? config.difficulties.delete(value)
+        : config.difficulties.add(value);
+    }
+
+    $$('#difficulty-picker .chip').forEach((chip) => {
+      const v = chip.dataset.difficulty;
+      chip.setAttribute('aria-pressed', String(
+        v === 'any' ? config.anyDifficulty : config.difficulties.has(v)));
+    });
+
+    $('#difficulty-error').hidden = true;
+    refreshStartButton();
+  });
+});
+
+refreshStartButton();
 
 let runner = null;
 let countdown = null;
@@ -84,6 +119,12 @@ async function begin(session) {
 }
 
 $('#start-btn').addEventListener('click', async () => {
+  if (!difficultyChosen()) {
+    $('#difficulty-error').hidden = false;
+    $('#difficulty-picker').scrollIntoView({ block: 'center', behavior: 'smooth' });
+    return;
+  }
+
   const button = $('#start-btn');
   button.dataset.loading = 'true';
   try {

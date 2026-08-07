@@ -25,8 +25,13 @@ document.title = `${rule.name} — SAT Grammar Lab`;
 $('#rule-domain').textContent = rule.domain.name;
 $('#rule-name').textContent = rule.name;
 $('#rule-summary').textContent = rule.summary;
+// A cheat sheet is the natural step before drilling, so offer it here.
+$('#practice-rule-btn').insertAdjacentElement('beforebegin',
+  h('a.btn.btn-lg', { href: `cheatsheet.html?rule=${rule.slug}`,
+                      style: { marginRight: 'var(--space-3)' } }, '📘 Cheat sheet'));
+
 $('#practice-rule-btn').addEventListener('click', () => {
-  location.assign(`practice.html?rule=${rule.slug}&start=1`);
+  location.assign(`practice.html?rule=${rule.slug}&difficulty=any&start=1`);
 });
 
 /* ---- lesson -------------------------------------------------------------- */

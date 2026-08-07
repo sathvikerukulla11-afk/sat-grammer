@@ -74,7 +74,7 @@ render($('#mastery-table'), rules.map((row) => {
         h('span.mastery-label', { dataset: { band: band.band } }, band.label))),
     h('td', {}, completionCell(completionByRule.get(row.rule_id))),
     h('td', {},
-      h('a.btn.btn-sm.btn-ghost', { href: `practice.html?rule=${row.slug}&start=1` }, 'Drill')));
+      h('a.btn.btn-sm.btn-ghost', { href: `practice.html?rule=${row.slug}&difficulty=any&start=1` }, 'Drill')));
 }));
 
 function completionCell(progress) {
@@ -147,7 +147,7 @@ function drawInsights(analysis) {
                  `${analysis.attempts === 1 ? '' : 's'}. ` +
                  'Around ten is where this starts telling you something you could not ' +
                  'have guessed.'),
-      h('a.btn.btn-primary.mt-4', { href: 'practice.html?mode=mixed&start=1' },
+      h('a.btn.btn-primary.mt-4', { href: 'practice.html?mode=mixed&difficulty=any&start=1' },
         'Answer a few more')));
     return;
   }
@@ -173,7 +173,7 @@ function costlyRulesCard(rules) {
     rules?.length
       ? h('div.stack-sm.mt-5', {}, rules.map((rule) =>
           h('a.row-between', {
-            href: `practice.html?rule=${rule.slug}&start=1`,
+            href: `practice.html?rule=${rule.slug}&difficulty=any&start=1`,
             style: { textDecoration: 'none', color: 'inherit',
                      padding: 'var(--space-2) 0', borderBottom: '1px solid var(--border)' }
           },

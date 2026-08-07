@@ -163,7 +163,7 @@ async function drawHistory() {
 const truncate = (text, max) => (text.length > max ? `${text.slice(0, max)}…` : text);
 
 $('#practice-missed-btn').addEventListener('click', () => {
-  location.assign('practice.html?mode=review&start=1');
+  location.assign('practice.html?mode=review&difficulty=any&start=1');
 });
 
 await drawMissed();

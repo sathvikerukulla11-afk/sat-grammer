@@ -33,6 +33,11 @@
   line-height: var(--leading-loose);
   max-width: var(--measure);
   margin-bottom: var(--space-6);
+
+  /* Rhetorical-synthesis items present research notes as bulleted lines.
+     pre-line keeps the newlines that separate them while still collapsing
+     ordinary runs of whitespace, so single-sentence passages are unaffected. */
+  white-space: pre-line;
 }
 .passage .blank {
   display: inline-block;

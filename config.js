@@ -68,6 +68,8 @@ export const CONFIG = Object.freeze({
     PRACTICE: 'practice.html',
     TIMED: 'timed.html',
     RULES: 'rules.html',
+    CHEATSHEETS: 'cheatsheets.html',
+    CHEATSHEET: 'cheatsheet.html',
     RULE: 'rule.html',
     REVIEW: 'review.html',
     PROGRESS: 'progress.html',
