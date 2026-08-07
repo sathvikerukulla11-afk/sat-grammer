@@ -31,6 +31,7 @@ const PRIVATE_NAV = [
   { href: R.RULES, label: 'Rules' },
   { href: R.REVIEW, label: 'Review' },
   { href: R.PROGRESS, label: 'Progress' },
+  { href: R.COACH, label: '✨ Coach' },
   { href: R.LEADERBOARD, label: 'Leaderboard' }
 ];
 

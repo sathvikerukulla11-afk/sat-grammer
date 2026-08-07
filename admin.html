@@ -335,12 +335,21 @@
                 </div>
                 <div class="field">
                   <label class="field__label" for="c-expires">Expires <span class="muted">(optional)</span></label>
-                  <input class="input" type="date" id="c-expires">
+                  <input class="input" type="datetime-local" id="c-expires" step="60">
+                  <p class="field__help">
+                    Date and time of day, in your own timezone. Blank means the code
+                    never expires. Picking a date defaults the time to midnight, so set
+                    the hour if you mean the end of that day.
+                  </p>
                 </div>
                 <div class="field">
-                  <label class="field__label" for="c-grant-days">Grant length <span class="muted">(optional)</span></label>
-                  <input class="input" type="number" id="c-grant-days" min="1" max="3650" placeholder="Days">
-                  <p class="field__help">Blank means premium never expires. You can override this when approving.</p>
+                  <label class="field__label" for="c-grant-until">Premium ends <span class="muted">(optional)</span></label>
+                  <input class="input" type="datetime-local" id="c-grant-until" step="60">
+                  <p class="field__help">
+                    Everyone approved on this code loses premium at this moment,
+                    whenever they were approved. Blank means premium never expires.
+                    You can override it per person when approving.
+                  </p>
                 </div>
                 <div class="field">
                   <label class="field__label" for="c-note">Note <span class="muted">(optional)</span></label>

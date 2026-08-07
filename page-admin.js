@@ -6,7 +6,7 @@
 import { mountShell } from './ui-shell.js';
 import { requireAuth, isAdmin } from './core-auth.js';
 import { h, render, $, $$ } from './core-dom.js';
-import { num, pct, relativeTime, titleCase, dateShort } from './core-format.js';
+import { num, pct, relativeTime, titleCase, dateShort, dateTimeShort } from './core-format.js';
 import { getRules } from './svc-questions.js';
 import * as admin from './svc-admin.js';
 import { listFeedback, setFeedbackState } from './svc-feedback.js';
@@ -538,10 +538,12 @@ async function loadUsers() {
         // is_premium can be true while premium_until has passed. Showing a
         // plain green badge there would be a lie.
         user.premium_active
-          ? h('span.badge.badge-success', {}, user.premium_until
-              ? `Premium to ${dateShort(user.premium_until)}` : 'Premium')
+          ? h('span.badge.badge-success', {
+              title: user.premium_until ? new Date(user.premium_until).toString() : ''
+            }, user.premium_until
+              ? `Premium to ${dateTimeShort(user.premium_until)}` : 'Premium')
           : user.is_premium
-            ? h('span.badge.badge-danger', {}, `Expired ${dateShort(user.premium_until)}`)
+            ? h('span.badge.badge-danger', {}, `Expired ${dateTimeShort(user.premium_until)}`)
             : h('span.muted.text-xs', {}, 'Free'),
         isAdmin()
           ? h('div.mt-2', {}, h('button.btn.btn-sm', {
@@ -594,9 +596,8 @@ async function togglePremium(user) {
     return;
   }
 
-  const daysInput = h('input.input', {
-    type: 'number', min: '1', max: '3650', id: 'grant-days',
-    placeholder: 'Blank = never expires'
+  const untilInput = h('input.input', {
+    type: 'datetime-local', step: '60', id: 'grant-until'
   });
 
   openModal({
@@ -604,25 +605,28 @@ async function togglePremium(user) {
     body: h('div.stack', {},
       h('p.muted', {}, user.email || 'No email on file for this account.'),
       h('div.field', {},
-        h('label.field__label', { for: 'grant-days' }, 'Premium lasts (days)'),
-        daysInput,
-        h('p.field__help', {}, 'This bypasses the request queue. Use it for comps and corrections.'))),
+        h('label.field__label', { for: 'grant-until' }, 'Premium ends'),
+        untilInput,
+        h('p.field__help', {}, 'Leave blank for no expiry. This bypasses the request queue — use it for comps and corrections.'))),
     actions: [
       { label: 'Cancel' },
       {
         label: 'Grant', variant: 'btn-primary',
-        onClick: () => ({ days: daysInput.value.trim() })
+        onClick: () => ({ until: untilInput.value.trim() })
       }
     ],
     onClose: async (value) => {
       if (!value || typeof value !== 'object') return;
-      const until = value.days
-        ? new Date(Date.now() + Number(value.days) * 86400000).toISOString()
-        : null;
+      // A datetime-local value is local wall time and `new Date()` parses
+      // it as such, so this lands on the instant the admin meant.
+      const until = value.until ? new Date(value.until).toISOString() : null;
+      if (until && new Date(until) <= new Date()) {
+        return toastError('That end date has already passed.');
+      }
       try {
         await admin.setUserPremium(user.id, true, until);
         toastSuccess(until
-          ? `@${user.username} has premium until ${dateShort(until)}.`
+          ? `@${user.username} has premium until ${dateTimeShort(until)}.`
           : `@${user.username} has premium with no expiry.`);
         await loadUsers();
       } catch (err) { toastError(err.message); }
@@ -945,6 +949,20 @@ async function loadPremium() {
   await Promise.all([loadRequests(), loadCodes()]);
 }
 
+/**
+ * An ISO instant → the local "YYYY-MM-DDTHH:MM" a datetime-local wants.
+ *
+ * toISOString() would be wrong here: it is UTC, so prefilling with it
+ * shifts the displayed time by the reader's offset. Subtracting the offset
+ * first makes the slice come out as local wall time.
+ */
+function toLocalInput(value) {
+  if (!value) return '';
+  const d = new Date(value);
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+    .toISOString().slice(0, 16);
+}
+
 /* ---- requests ----------------------------------------------------- */
 async function loadRequests() {
   const body = $('#requests-table');
@@ -998,7 +1016,7 @@ function requestRow(r) {
             `by ${r.reviewer || 'unknown'} · ${relativeTime(r.reviewed_at)}`)
         : null,
       r.granted_until
-        ? h('div.text-xs.muted', {}, `until ${dateShort(r.granted_until)}`)
+        ? h('div.text-xs.muted', {}, `until ${dateTimeShort(r.granted_until)}`)
         : (r.status === 'approved' ? h('div.text-xs.muted', {}, 'no expiry') : null),
       r.review_note ? h('div.text-xs.muted.mt-1', {}, r.review_note) : null),
 
@@ -1018,14 +1036,14 @@ function requestRow(r) {
 }
 
 async function approve(r) {
-  const days = await askDays(r);
-  if (days === null) return;                     // cancelled
+  const choice = await askUntil(r);
+  if (choice === null) return;                   // cancelled
 
   try {
     const out = await admin.reviewPremiumRequest(r.id, true,
-      { days: days.days, note: days.note });
+      { until: choice.until, note: choice.note });
     toastSuccess(out.granted_until
-      ? `${r.email} has premium until ${dateShort(out.granted_until)}.`
+      ? `${r.email} has premium until ${dateTimeShort(out.granted_until)}.`
       : `${r.email} has premium with no expiry.`);
     await loadPremium();
   } catch (err) {
@@ -1055,12 +1073,11 @@ async function reject(r) {
  * Approval needs a duration. The code may carry a default; the admin can
  * override it here, which is the whole point of reviewing by hand.
  */
-function askDays(r) {
+function askUntil(r) {
   return new Promise((resolve) => {
-    const daysInput = h('input.input', {
-      type: 'number', min: '1', max: '3650', id: 'approve-days',
-      value: r.code_grant_days ?? '',
-      placeholder: 'Blank = never expires'
+    const untilInput = h('input.input', {
+      type: 'datetime-local', step: '60', id: 'approve-until',
+      value: toLocalInput(r.code_grant_until)
     });
     const noteInput = h('input.input', {
       type: 'text', maxlength: '300', id: 'approve-note',
@@ -1070,13 +1087,13 @@ function askDays(r) {
     openModal({
       title: `Approve ${r.email}?`,
       body: h('div.stack', {},
-        h('p.muted', {}, r.code_grant_days
-          ? `The code ${r.code_used} suggests ${r.code_grant_days} days. Change it if you like.`
-          : `The code ${r.code_used} carries no default length.`),
+        h('p.muted', {}, r.code_grant_until
+          ? `The code ${r.code_used} ends premium on ${dateTimeShort(r.code_grant_until)}. Change it if you like.`
+          : `The code ${r.code_used} sets no end date, so premium would not expire.`),
         h('div.field', {},
-          h('label.field__label', { for: 'approve-days' }, 'Premium lasts (days)'),
-          daysInput,
-          h('p.field__help', {}, 'Leave blank to grant premium with no expiry date.')),
+          h('label.field__label', { for: 'approve-until' }, 'Premium ends'),
+          untilInput,
+          h('p.field__help', {}, 'Clear the field to grant premium with no expiry date.')),
         h('div.field', {},
           h('label.field__label', { for: 'approve-note' }, 'Note (optional)'),
           noteInput)),
@@ -1085,11 +1102,14 @@ function askDays(r) {
         {
           label: 'Approve',
           variant: 'btn-primary',
-          // openModal closes for us and passes whatever this returns to
+          // openModal closes for us and hands whatever this returns to
           // onClose, so the payload travels as the dialog's result.
           onClick: () => {
-            const raw = daysInput.value.trim();
-            return { days: raw === '' ? null : Number(raw), note: noteInput.value.trim() };
+            const raw = untilInput.value.trim();
+            return {
+              until: raw === '' ? null : new Date(raw).toISOString(),
+              note: noteInput.value.trim()
+            };
           }
         }
       ],
@@ -1141,9 +1161,19 @@ function codeRow(c) {
         ? h('div.text-xs.muted', {}, `${c.pending_count} pending`)
         : null),
 
-    h('td', {}, c.grant_days ? `${c.grant_days} days` : h('span.muted', {}, 'no expiry')),
+    h('td', {}, c.grant_until
+      ? h('span', {
+          // A grant date that has already passed would approve people into
+          // an expired subscription, so flag it rather than showing a
+          // neutral date.
+          class: c.grant_lapsed ? 'text-error' : '',
+          title: new Date(c.grant_until).toString()
+        }, dateTimeShort(c.grant_until) + (c.grant_lapsed ? ' (passed)' : ''))
+      : h('span.muted', {}, 'no expiry')),
 
-    h('td', {}, c.expires_at ? dateShort(c.expires_at) : h('span.muted', {}, '—')),
+    h('td', {}, c.expires_at
+      ? h('span', { title: new Date(c.expires_at).toString() }, dateTimeShort(c.expires_at))
+      : h('span.muted', {}, 'never')),
 
     h('td', {},
       c.exhausted ? h('span.badge.badge-danger', {}, 'Used up')
@@ -1189,13 +1219,15 @@ $('#code-form')?.addEventListener('submit', async (e) => {
 
   try {
     const expires = $('#c-expires').value;
+    const grantUntil = $('#c-grant-until').value;
     const created = await admin.createPremiumCode({
       code: $('#c-code').value.trim() || null,
       maxUses: $('#c-max-uses').value,
-      // A date input gives a bare day. Grant the whole of it by expiring at
-      // the end rather than at midnight when it starts.
-      expiresAt: expires ? new Date(`${expires}T23:59:59`).toISOString() : null,
-      grantDays: $('#c-grant-days').value || null,
+      // "YYYY-MM-DDTHH:MM" from a datetime-local input is local wall time,
+      // and `new Date()` parses it as such, so this lands on the instant
+      // the admin actually meant regardless of their timezone.
+      expiresAt: expires ? new Date(expires).toISOString() : null,
+      grantUntil: grantUntil ? new Date(grantUntil).toISOString() : null,
       note: $('#c-note').value.trim() || null
     });
     toastSuccess(`Code ${created.code} created.`);

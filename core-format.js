@@ -48,6 +48,19 @@ export const dateShort = (value) =>
 export const dateLong = (value) =>
   value ? new Date(value).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
 
+/**
+ * Date plus time of day, for deadlines where the hour matters.
+ *
+ * Rendered in the reader's own timezone. An access code stores an absolute
+ * instant, so an admin in New York and a student in Los Angeles see the
+ * same deadline written as two different local clock times — which is the
+ * behaviour you want, not a bug to paper over.
+ */
+export const dateTimeShort = (value) =>
+  value ? new Date(value).toLocaleString(undefined, {
+    month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
+  }) : '—';
+
 /** Mastery number → the band label and colour key the UI uses. */
 export function masteryBand(mastery) {
   const m = Number(mastery) || 0;

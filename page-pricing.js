@@ -4,7 +4,7 @@ import { h, render, $ } from './core-dom.js';
 import { isSignedIn } from './core-auth.js';
 import { listPremiumFeatures, isPremium, redeemCode, myRequest } from './svc-premium.js';
 import { toastSuccess, toastError } from './ui-toast.js';
-import { dateShort, relativeTime } from './core-format.js';
+import { dateTimeShort, relativeTime } from './core-format.js';
 
 await mountShell();
 
@@ -72,7 +72,7 @@ function showRequest(r) {
     return render(slot, h('div.alert.alert-success', {}, h('div', {},
       h('strong', {}, 'Approved. '),
       r.granted_until
-        ? `Premium is active until ${dateShort(r.granted_until)}.`
+        ? `Premium is active until ${dateTimeShort(r.granted_until)}.`
         : 'Premium is active with no expiry date.',
       r.review_note ? h('div.text-sm.mt-2', {}, r.review_note) : null)));
   }

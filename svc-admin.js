@@ -417,13 +417,13 @@ export async function listPremiumCodes() {
 }
 
 export async function createPremiumCode({
-  code = null, maxUses = 1, expiresAt = null, grantDays = null, note = null
+  code = null, maxUses = 1, expiresAt = null, grantUntil = null, note = null
 } = {}) {
   const { data, error } = await supabase.rpc('admin_create_premium_code', {
     p_code: code || null,
     p_max_uses: Number(maxUses) || 1,
     p_expires_at: expiresAt || null,
-    p_grant_days: grantDays ? Number(grantDays) : null,
+    p_grant_until: grantUntil || null,
     p_note: note || null
   });
   if (error) throw error;
@@ -451,11 +451,11 @@ export async function listPremiumRequests(status = null) {
 }
 
 /** The only client-side path that can turn premium on. Admin-gated in SQL. */
-export async function reviewPremiumRequest(id, approve, { days = null, note = null } = {}) {
+export async function reviewPremiumRequest(id, approve, { until = null, note = null } = {}) {
   const { data, error } = await supabase.rpc('review_premium_request', {
     p_request_id: id,
     p_approve: approve,
-    p_days: days ? Number(days) : null,
+    p_until: until || null,
     p_note: note || null
   });
   if (error) throw error;

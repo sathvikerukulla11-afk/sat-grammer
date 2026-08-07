@@ -52,3 +52,20 @@ export async function myRequest() {
   const { data, error } = await supabase.rpc('my_premium_request');
   return error ? null : data;
 }
+
+/* ---- premium grammar tools ---------------------------------------------
+ * Both RPCs raise a permission error without entitlement rather than
+ * returning a reduced payload, so there is no partial answer to scrape.
+ * ------------------------------------------------------------------------ */
+
+export async function getStudyPlan(weeks = 4) {
+  const { data, error } = await supabase.rpc('get_study_plan', { p_weeks: weeks });
+  if (error) throw error;
+  return data;
+}
+
+export async function getAdvancedAnalytics(days = 60) {
+  const { data, error } = await supabase.rpc('get_advanced_analytics', { p_days: days });
+  if (error) throw error;
+  return data;
+}
