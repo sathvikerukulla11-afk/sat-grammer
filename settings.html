@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font-size="md">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Settings — SAT Grammar Lab</title>
+<meta name="description" content="Manage your SAT Grammar Lab account and preferences.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://example.com/settings.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Settings — SAT Grammar Lab">
+<meta property="og:description" content="Manage your SAT Grammar Lab account and preferences.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="main.css">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem('satgl.theme')||'"system"');var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.dataset.fontSize=JSON.parse(localStorage.getItem('satgl.fontSize')||'"md"');}catch(e){}})();</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div id="site-header"></div>
+
+<main id="main" tabindex="-1">
+  <div class="container container-prose">
+    <div class="page-header mt-8">
+      <div>
+        <h1 class="page-header__title">Settings</h1>
+        <p class="page-header__sub">Account, study preferences, appearance, and privacy.</p>
+      </div>
+    </div>
+
+    <section class="card" aria-labelledby="h-account">
+      <h2 class="h4" id="h-account">Account</h2>
+      <form class="stack mt-5" id="account-form" novalidate>
+        <div class="field">
+          <label class="label" for="display_name">Display name</label>
+          <input class="input" type="text" id="display_name" maxlength="60">
+        </div>
+        <div class="field">
+          <label class="label" for="username">Username</label>
+          <input class="input" type="text" id="username" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+">
+          <p class="field__help" id="username-status" aria-live="polite"></p>
+        </div>
+        <div class="field">
+          <label class="label" for="bio">Bio <span class="label__hint">— optional, 280 characters</span></label>
+          <textarea class="textarea" id="bio" maxlength="280"></textarea>
+        </div>
+        <div class="field">
+          <label class="label" for="avatar">Profile picture</label>
+          <input class="input" type="file" id="avatar" accept="image/png,image/jpeg,image/webp">
+          <p class="field__help">PNG, JPEG, or WebP. Under 2 MB.</p>
+        </div>
+        <button class="btn btn-primary" type="submit">Save account details</button>
+      </form>
+    </section>
+
+    <section class="card mt-6" aria-labelledby="h-study">
+      <h2 class="h4" id="h-study">Study</h2>
+      <form class="stack mt-5" id="study-form">
+        <div class="field">
+          <label class="label" for="target_score">Target Writing score</label>
+          <input class="input" type="number" id="target_score" min="400" max="800" step="10">
+        </div>
+        <div class="field">
+          <label class="label" for="test_date">Test date</label>
+          <input class="input" type="date" id="test_date">
+        </div>
+        <div class="field">
+          <label class="label" for="daily_goal">Daily question goal</label>
+          <input class="input" type="number" id="daily_goal" min="5" max="200" step="5">
+        </div>
+        <div class="setting-row">
+          <div class="setting-row__text">
+            <div class="setting-row__title">Instant feedback</div>
+            <div class="setting-row__desc">Show the explanation immediately after each answer.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="instant_feedback" aria-label="Instant feedback"><span class="switch__track"></span></label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row__text">
+            <div class="setting-row__title">Keyboard shortcuts</div>
+            <div class="setting-row__desc">Use A–D and Enter during practice.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="keyboard_shortcuts" aria-label="Keyboard shortcuts"><span class="switch__track"></span></label>
+        </div>
+        <button class="btn btn-primary" type="submit">Save study settings</button>
+      </form>
+    </section>
+
+    <section class="card mt-6" aria-labelledby="h-appearance">
+      <h2 class="h4" id="h-appearance">Appearance</h2>
+      <div class="stack mt-5">
+        <div class="setting-row">
+          <div class="setting-row__text">
+            <div class="setting-row__title">Theme</div>
+            <div class="setting-row__desc">System follows your device setting.</div>
+          </div>
+          <div class="btn-group" role="group" aria-label="Theme" id="theme-picker">
+            <button class="btn" type="button" data-theme="light" aria-pressed="false">Light</button>
+            <button class="btn" type="button" data-theme="dark" aria-pressed="false">Dark</button>
+            <button class="btn" type="button" data-theme="system" aria-pressed="true">System</button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row__text">
+            <div class="setting-row__title">Text size</div>
+            <div class="setting-row__desc">Scales the whole interface.</div>
+          </div>
+          <div class="btn-group" role="group" aria-label="Text size" id="font-picker">
+            <button class="btn" type="button" data-size="sm" aria-pressed="false">S</button>
+            <button class="btn" type="button" data-size="md" aria-pressed="true">M</button>
+            <button class="btn" type="button" data-size="lg" aria-pressed="false">L</button>
+            <button class="btn" type="button" data-size="xl" aria-pressed="false">XL</button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row__text">
+            <div class="setting-row__title">Reduce motion</div>
+            <div class="setting-row__desc">Turns off transitions and entrance animations.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="reduced_motion" aria-label="Reduce motion"><span class="switch__track"></span></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="card mt-6" aria-labelledby="h-privacy">
+      <h2 class="h4" id="h-privacy">Privacy</h2>
+      <div class="stack mt-5">
+        <div class="setting-row">
+          <div class="setting-row__text">
+            <div class="setting-row__title">Show me on the leaderboard</div>
+            <div class="setting-row__desc">Your username, level, and XP become visible to other signed-in students.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="is_public" aria-label="Show on leaderboard"><span class="switch__track"></span></label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row__text">
+            <div class="setting-row__title">Download your data</div>
+            <div class="setting-row__desc">Every row we hold about you, as a JSON file.</div>
+          </div>
+          <button class="btn btn-sm" type="button" id="export-data-btn">Download</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card mt-6" aria-labelledby="h-security">
+      <h2 class="h4" id="h-security">Security</h2>
+      <form class="stack mt-5" id="password-form" novalidate>
+        <div class="field">
+          <label class="label" for="new_password">New password</label>
+          <input class="input" type="password" id="new_password" autocomplete="new-password" minlength="8">
+        </div>
+        <div class="field">
+          <label class="label" for="confirm_password">Confirm new password</label>
+          <input class="input" type="password" id="confirm_password" autocomplete="new-password">
+        </div>
+        <button class="btn" type="submit">Change password</button>
+      </form>
+
+      <hr>
+
+      <div class="setting-row">
+        <div class="setting-row__text">
+          <div class="setting-row__title">Delete account</div>
+          <div class="setting-row__desc">Permanently removes your profile, attempts, and statistics. This cannot be undone.</div>
+        </div>
+        <button class="btn btn-danger btn-sm" type="button" id="delete-account-btn">Delete</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module" src="page-settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font-size="md">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SAT grammar rules — SAT Grammar Lab</title>
+<meta name="description" content="Every grammar rule the SAT tests, explained plainly, with original practice questions for each.">
+<link rel="canonical" href="https://example.com/rules.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="SAT grammar rules — SAT Grammar Lab">
+<meta property="og:description" content="Every grammar rule the SAT tests, explained plainly, with original practice questions for each.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="main.css">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem('satgl.theme')||'"system"');var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.dataset.fontSize=JSON.parse(localStorage.getItem('satgl.fontSize')||'"md"');}catch(e){}})();</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div id="site-header"></div>
+
+<main id="main" tabindex="-1">
+  <div class="container">
+    <div class="page-header mt-8">
+      <div>
+        <h1 class="page-header__title">Grammar rules</h1>
+        <p class="page-header__sub">Every skill the exam tests, with original practice for each.</p>
+      </div>
+      <div class="row">
+        <label class="visually-hidden" for="rule-search">Search rules</label>
+        <input class="input" type="search" id="rule-search" placeholder="Search rules…" style="width:220px">
+      </div>
+    </div>
+
+    <div class="row-wrap mb-6" role="group" aria-label="Filter by domain" id="domain-filter"></div>
+
+    <div id="rules-grid" class="stack-lg" aria-live="polite">
+      <div class="grid grid-auto">
+        <div class="card"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text skeleton-line-70"></div></div>
+        <div class="card"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text skeleton-line-70"></div></div>
+        <div class="card"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text skeleton-line-70"></div></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module" src="page-rules.js"></script>
+</body>
+</html>

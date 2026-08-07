@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font-size="md">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Create your free account — SAT Grammar Lab</title>
+<meta name="description" content="Create a free SAT Grammar Lab account and start practising original grammar questions.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://example.com/register.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Create your free account — SAT Grammar Lab">
+<meta property="og:description" content="Create a free SAT Grammar Lab account and start practising original grammar questions.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="main.css">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem('satgl.theme')||'"system"');var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.dataset.fontSize=JSON.parse(localStorage.getItem('satgl.fontSize')||'"md"');}catch(e){}})();</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div id="site-header"></div>
+
+<main id="main" tabindex="-1">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <h1 class="auth-card__title">Create your account</h1>
+      <p class="auth-card__sub">Free, and it stays free for practice.</p>
+
+      <div id="form-alert" hidden></div>
+
+      <form id="register-form" class="stack" novalidate>
+        <div class="field">
+          <label class="label" for="username">Username
+            <span class="label__hint">— shown on the leaderboard</span></label>
+          <input class="input" type="text" id="username" name="username"
+                 autocomplete="username" required minlength="3" maxlength="24"
+                 pattern="[A-Za-z0-9_]+" aria-describedby="username-error username-help">
+          <p class="field__help" id="username-help">Letters, numbers, and underscores.</p>
+          <p class="field__error" id="username-error" hidden></p>
+        </div>
+
+        <div class="field">
+          <label class="label" for="email">Email</label>
+          <input class="input" type="email" id="email" name="email"
+                 autocomplete="email" required aria-describedby="email-error">
+          <p class="field__error" id="email-error" hidden></p>
+        </div>
+
+        <div class="field">
+          <label class="label" for="password">Password</label>
+          <input class="input" type="password" id="password" name="password"
+                 autocomplete="new-password" required minlength="8"
+                 aria-describedby="password-error strength-text">
+          <div class="strength" id="strength" data-score="0" aria-hidden="true">
+            <div class="strength__bar"></div><div class="strength__bar"></div>
+            <div class="strength__bar"></div><div class="strength__bar"></div>
+          </div>
+          <p class="field__help" id="strength-text" aria-live="polite">At least 8 characters, with a letter and a number.</p>
+          <p class="field__error" id="password-error" hidden></p>
+        </div>
+
+        <label class="check">
+          <input type="checkbox" id="terms" required>
+          <span>I agree to the <a href="#terms">terms</a> and <a href="#privacy">privacy policy</a>.</span>
+        </label>
+
+        <button class="btn btn-primary btn-block btn-lg" type="submit" id="submit-btn">Create account</button>
+      </form>
+
+      <p class="text-center mt-6 text-sm muted">
+        Already have an account? <a href="login.html">Sign in</a>
+      </p>
+    </div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module" src="page-register.js"></script>
+</body>
+</html>

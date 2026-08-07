@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font-size="md">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Review — SAT Grammar Lab</title>
+<meta name="description" content="Review the SAT grammar questions you missed.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://example.com/review.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Review — SAT Grammar Lab">
+<meta property="og:description" content="Review the SAT grammar questions you missed.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="main.css">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem('satgl.theme')||'"system"');var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.dataset.fontSize=JSON.parse(localStorage.getItem('satgl.fontSize')||'"md"');}catch(e){}})();</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div id="site-header"></div>
+
+<main id="main" tabindex="-1">
+  <div class="container">
+    <div class="page-header mt-8">
+      <div>
+        <h1 class="page-header__title">Review</h1>
+        <p class="page-header__sub">Questions you missed, and questions you saved.</p>
+      </div>
+      <button class="btn btn-primary" type="button" id="practice-missed-btn">Practise these</button>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Review sections">
+      <button class="tab" role="tab" id="tab-missed" aria-selected="true" aria-controls="panel-missed">Missed</button>
+      <button class="tab" role="tab" id="tab-saved" aria-selected="false" aria-controls="panel-saved">Bookmarked</button>
+      <button class="tab" role="tab" id="tab-history" aria-selected="false" aria-controls="panel-history">Recent attempts</button>
+    </div>
+
+    <div id="panel-missed" role="tabpanel" aria-labelledby="tab-missed" class="mt-6">
+      <div class="row-wrap mb-4">
+        <label class="visually-hidden" for="rule-filter">Filter by rule</label>
+        <select class="select" id="rule-filter" style="max-width:280px">
+          <option value="">All grammar rules</option>
+        </select>
+      </div>
+      <div id="missed-list" aria-live="polite"></div>
+    </div>
+
+    <div id="panel-saved" role="tabpanel" aria-labelledby="tab-saved" class="mt-6" hidden>
+      <div id="saved-list" aria-live="polite"></div>
+    </div>
+
+    <div id="panel-history" role="tabpanel" aria-labelledby="tab-history" class="mt-6" hidden>
+      <div id="history-list" aria-live="polite"></div>
+    </div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module" src="page-review.js"></script>
+</body>
+</html>

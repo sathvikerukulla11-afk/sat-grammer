@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+Allow: /rules.html
+Allow: /rule.html
+
+# Signed-in surfaces have nothing useful for a crawler
+Disallow: /dashboard.html
+Disallow: /practice.html
+Disallow: /timed.html
+Disallow: /review.html
+Disallow: /progress.html
+Disallow: /achievements.html
+Disallow: /leaderboard.html
+Disallow: /profile.html
+Disallow: /settings.html
+Disallow: /admin.html
+Disallow: /setup.html
+Disallow: /login.html
+Disallow: /register.html
+
+Sitemap: https://example.com/sitemap.xml

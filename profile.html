@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font-size="md">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Profile — SAT Grammar Lab</title>
+<meta name="description" content="Your SAT Grammar Lab profile.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://example.com/profile.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Profile — SAT Grammar Lab">
+<meta property="og:description" content="Your SAT Grammar Lab profile.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="main.css">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem('satgl.theme')||'"system"');var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.dataset.fontSize=JSON.parse(localStorage.getItem('satgl.fontSize')||'"md"');}catch(e){}})();</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div id="site-header"></div>
+
+<main id="main" tabindex="-1">
+  <div class="container">
+    <section class="profile-head mt-8">
+      <div id="profile-avatar"></div>
+      <div class="stack-sm">
+        <h1 class="h2" id="profile-name">—</h1>
+        <p class="muted" id="profile-username">—</p>
+        <p id="profile-bio" class="mt-2"></p>
+        <div class="row-wrap mt-2" id="profile-badges"></div>
+      </div>
+      <div class="spacer"></div>
+      <a class="btn" href="settings.html">Edit profile</a>
+    </section>
+
+    <section class="grid grid-4 mt-8" id="profile-stats"></section>
+
+    <div class="grid grid-2 mt-8">
+      <section class="card">
+        <h2 class="h4">Recent achievements</h2>
+        <div class="mt-4" id="profile-achievements"></div>
+      </section>
+      <section class="card">
+        <h2 class="h4">Study goal</h2>
+        <div class="mt-4" id="profile-goal"></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module" src="page-profile.js"></script>
+</body>
+</html>

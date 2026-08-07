@@ -1,0 +1,57 @@
+/* ==========================================================================
+   Typography utilities
+   ========================================================================== */
+
+.h1 { font-size: var(--text-4xl); font-weight: var(--weight-bold); letter-spacing: -0.025em; }
+.h2 { font-size: var(--text-3xl); font-weight: var(--weight-bold); letter-spacing: -0.02em; }
+.h3 { font-size: var(--text-2xl); font-weight: var(--weight-semi); letter-spacing: -0.015em; }
+.h4 { font-size: var(--text-xl);  font-weight: var(--weight-semi); }
+.h5 { font-size: var(--text-lg);  font-weight: var(--weight-semi); }
+
+.lead      { font-size: var(--text-lg); color: var(--text-muted); line-height: var(--leading-loose); }
+.text-sm   { font-size: var(--text-sm); }
+.text-xs   { font-size: var(--text-xs); }
+.muted     { color: var(--text-muted); }
+.subtle    { color: var(--text-subtle); }
+.mono      { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.tabular   { font-variant-numeric: tabular-nums; }
+.truncate  { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.prose     { max-width: var(--container-prose); }
+
+.eyebrow {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semi);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand-text);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--blue-600), var(--violet-600));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Rendered lesson content (markdown → HTML) */
+.rich-text { max-width: var(--container-prose); line-height: var(--leading-loose); }
+.rich-text > * + * { margin-top: var(--space-4); }
+.rich-text h2 { font-size: var(--text-2xl); margin-top: var(--space-10); }
+.rich-text h3 { font-size: var(--text-xl);  margin-top: var(--space-8); }
+.rich-text ul, .rich-text ol { padding-left: var(--space-6); }
+.rich-text li + li { margin-top: var(--space-2); }
+.rich-text code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--bg-sunken);
+  padding: 0.15em 0.4em;
+  border-radius: var(--radius-sm);
+}
+.rich-text blockquote {
+  border-left: 3px solid var(--brand-border);
+  padding-left: var(--space-4);
+  color: var(--text-muted);
+  font-style: italic;
+}
+.rich-text .example-good { color: var(--success); font-weight: var(--weight-medium); }
+.rich-text .example-bad  { color: var(--danger);  text-decoration: line-through; }

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font-size="md">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Admin — SAT Grammar Lab</title>
+<meta name="description" content="Content authoring and moderation for SAT Grammar Lab.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://example.com/admin.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Admin — SAT Grammar Lab">
+<meta property="og:description" content="Content authoring and moderation for SAT Grammar Lab.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="main.css">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem('satgl.theme')||'"system"');var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.dataset.fontSize=JSON.parse(localStorage.getItem('satgl.fontSize')||'"md"');}catch(e){}})();</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div id="site-header"></div>
+
+<main id="main" tabindex="-1">
+  <div class="container container-wide">
+      <div class="page-header mt-8">
+        <div>
+          <h1 class="page-header__title">Admin</h1>
+          <p class="page-header__sub">Authoring, review queue, coverage, and moderation.</p>
+        </div>
+        <button class="btn btn-primary" type="button" id="new-question-btn">New question</button>
+      </div>
+
+      <div class="admin-layout">
+        <nav class="sidebar" aria-label="Admin sections">
+          <button class="nav__link" type="button" data-panel="questions" aria-current="page">Questions</button>
+          <button class="nav__link" type="button" data-panel="editor">Editor</button>
+          <button class="nav__link" type="button" data-panel="coverage">Coverage</button>
+          <button class="nav__link" type="button" data-panel="reports">Reports</button>
+        <button class="nav__link" type="button" data-panel="feedback">Feedback</button>
+          <button class="nav__link" type="button" data-panel="calibration">Calibration</button>
+        <button class="nav__link" type="button" data-panel="quality">Quality queue</button>
+        <button class="nav__link" type="button" data-panel="rules">Rules</button>
+          <button class="nav__link" type="button" data-panel="users">Users</button>
+          <button class="nav__link" type="button" data-panel="import">Bulk import</button>
+        </nav>
+
+        <div>
+          <!-- Questions list -->
+          <section id="panel-questions" class="admin-panel" aria-labelledby="h-questions">
+            <h2 class="h4" id="h-questions">Question bank</h2>
+            <div class="row-wrap mb-5">
+              <label class="visually-hidden" for="q-search">Search question text</label>
+              <input class="input" type="search" id="q-search" placeholder="Search passage text…" style="max-width:280px">
+              <select class="select" id="q-status" style="max-width:170px" aria-label="Filter by status">
+                <option value="">Any status</option>
+                <option value="draft">Draft</option>
+                <option value="in_review">In review</option>
+                <option value="published">Published</option>
+                <option value="retired">Retired</option>
+                <option value="rejected">Rejected</option>
+              </select>
+              <select class="select" id="q-rule" style="max-width:220px" aria-label="Filter by rule">
+                <option value="">Any rule</option>
+              </select>
+              <select class="select" id="q-difficulty" style="max-width:150px" aria-label="Filter by difficulty">
+                <option value="">Any difficulty</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+                <option value="expert">Expert</option>
+              </select>
+              <select class="select" id="q-quality" style="max-width:170px" aria-label="Filter by editorial quality">
+                <option value="">Any quality</option>
+                <option value="4">4 stars and up</option>
+                <option value="3">3 stars and up</option>
+                <option value="2">2 stars and up</option>
+              </select>
+              <label class="check">
+                <input type="checkbox" id="q-deleted">
+                <span>Show deleted</span>
+              </label>
+            </div>
+            <div class="table-wrap">
+              <table class="table">
+                <caption class="visually-hidden">All questions in the bank</caption>
+                <thead>
+                  <tr>
+                    <th scope="col"><input type="checkbox" id="select-all" aria-label="Select all"></th>
+                    <th scope="col">Passage</th>
+                    <th scope="col">Rule</th>
+                    <th scope="col">Difficulty</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" class="num">Quality</th>
+                    <th scope="col" class="num">Served</th>
+                    <th scope="col" class="num">p-value</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="questions-table"></tbody>
+              </table>
+            </div>
+            <div class="row-between mt-4">
+              <span class="text-sm muted" id="q-count"></span>
+              <div class="row">
+                <button class="btn btn-sm" type="button" id="prev-page">← Previous</button>
+                <button class="btn btn-sm" type="button" id="next-page">Next →</button>
+              </div>
+            </div>
+            <div class="row-wrap mt-4" id="bulk-actions" hidden>
+              <span class="text-sm muted" id="bulk-count"></span>
+              <button class="btn btn-sm" type="button" data-bulk="in_review">Send to review</button>
+              <button class="btn btn-sm btn-success" type="button" data-bulk="published">Publish</button>
+              <button class="btn btn-sm" type="button" data-bulk="retired">Retire</button>
+              <button class="btn btn-sm btn-danger" type="button" id="bulk-delete">Delete</button>
+            </div>
+          </section>
+
+          <!-- Editor -->
+          <section id="panel-editor" class="admin-panel" aria-labelledby="h-editor" hidden>
+            <h2 class="h4" id="h-editor">Question editor</h2>
+            <form id="editor-form" class="stack">
+              <div class="alert alert-warning">
+                <div>
+                  <strong>Originality is non-negotiable.</strong>
+                  Write every sentence yourself. Do not copy, retype, or reword any passage from a
+                  real exam, a prep book, or another site. The database rejects duplicate passages,
+                  but it cannot detect a paraphrase — that part is on you.
+                </div>
+              </div>
+
+              <div class="editor-grid">
+                <div class="stack">
+                  <div class="field">
+                    <label class="label" for="e-rule">Grammar rule</label>
+                    <select class="select" id="e-rule" required></select>
+                  </div>
+                  <div class="field">
+                    <label class="label" for="e-difficulty">Difficulty</label>
+                    <select class="select" id="e-difficulty" required>
+                      <option value="easy">Easy</option>
+                      <option value="medium" selected>Medium</option>
+                      <option value="hard">Hard</option>
+                      <option value="expert">Expert</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label class="label" for="e-skill">SAT skill</label>
+                    <input class="input" type="text" id="e-skill" required
+                           placeholder="Boundaries: joining independent clauses">
+                  </div>
+                  <div class="field">
+                    <label class="label" for="e-passage">Passage
+                      <span class="label__hint">— use ____ for the blank</span></label>
+                    <textarea class="textarea" id="e-passage" rows="5" required></textarea>
+                  </div>
+                  <div class="field">
+                    <label class="label" for="e-stem">Question stem</label>
+                    <input class="input" type="text" id="e-stem"
+                           placeholder="Which choice completes the text…">
+                  </div>
+                  <div class="field">
+                    <label class="label" for="e-explanation">Explanation</label>
+                    <textarea class="textarea" id="e-explanation" rows="4" required></textarea>
+                  </div>
+                  <div class="field">
+                    <label class="label" for="e-tags">Tags
+                      <span class="label__hint">— comma separated</span></label>
+                    <input class="input" type="text" id="e-tags"
+                           placeholder="run-on, conjunction, punctuation">
+                    <p class="field__help">Free-form. For cross-cutting searches that do not fit the rule taxonomy.</p>
+                  </div>
+                  <div class="field">
+                    <label class="label" for="e-source">Internal note <span class="label__hint">— not shown to students</span></label>
+                    <input class="input" type="text" id="e-source">
+                  </div>
+                  <div class="field" id="quality-field" hidden>
+                    <span class="label">Editorial quality</span>
+                    <div class="row" id="quality-stars" role="radiogroup" aria-label="Quality rating"></div>
+                    <p class="field__help" id="quality-summary"></p>
+                    <label class="visually-hidden" for="e-quality-notes">Quality review notes</label>
+                    <textarea class="textarea" id="e-quality-notes" rows="2"
+                              placeholder="What would make this question better?"></textarea>
+                    <button class="btn btn-sm mt-2" type="button" id="save-rating">Save rating</button>
+                  </div>
+                </div>
+
+                <div class="stack">
+                  <h3 class="h5">Answer choices</h3>
+                  <p class="text-sm muted">Every choice needs a rationale. The three wrong ones are where students learn.</p>
+                  <div class="stack" id="choice-editors"></div>
+                </div>
+              </div>
+
+              <div class="row-wrap mt-6">
+                <button class="btn" type="submit" data-status="draft">Save draft</button>
+                <button class="btn btn-secondary" type="submit" data-status="in_review">Submit for review</button>
+                <button class="btn btn-primary" type="submit" data-status="published">Publish</button>
+                <button class="btn btn-ghost" type="button" id="preview-btn">Preview</button>
+                <div class="spacer"></div>
+                <button class="btn btn-danger" type="button" id="delete-question-btn" hidden>Delete</button>
+              </div>
+            </form>
+          </section>
+
+          <section id="panel-coverage" class="admin-panel" aria-labelledby="h-coverage" hidden>
+            <h2 class="h4" id="h-coverage">Content coverage</h2>
+            <p class="lead">How many published questions exist for each rule and difficulty. Empty cells are the content backlog.</p>
+            <div class="table-wrap mt-6"><table class="table">
+              <caption class="visually-hidden">Published question count by rule and difficulty</caption>
+              <thead><tr><th scope="col">Rule</th><th scope="col" class="num">Easy</th><th scope="col" class="num">Medium</th><th scope="col" class="num">Hard</th><th scope="col" class="num">Expert</th><th scope="col" class="num">Total</th><th scope="col" class="num">Draft</th></tr></thead>
+              <tbody id="coverage-table"></tbody>
+            </table></div>
+          </section>
+
+          <section id="panel-reports" class="admin-panel" aria-labelledby="h-reports" hidden>
+            <h2 class="h4" id="h-reports">Reported questions</h2>
+            <div id="reports-list"></div>
+          </section>
+
+          <section id="panel-calibration" class="admin-panel" aria-labelledby="h-calibration" hidden>
+            <h2 class="h4" id="h-calibration">Difficulty calibration</h2>
+            <p class="lead">Questions whose observed success rate does not match their difficulty label.</p>
+            <div class="table-wrap mt-6"><table class="table">
+              <caption class="visually-hidden">Questions with miscalibrated difficulty</caption>
+              <thead><tr><th scope="col">Passage</th><th scope="col">Labelled</th><th scope="col" class="num">Served</th><th scope="col" class="num">p-value</th><th scope="col">Suggested</th></tr></thead>
+              <tbody id="calibration-table"></tbody>
+            </table></div>
+          </section>
+
+          <section id="panel-feedback" class="admin-panel" hidden>
+          <div class="row-between">
+            <h2 class="h4">User feedback</h2>
+            <select class="select" id="feedback-state" style="max-width:180px" aria-label="Filter by state">
+              <option value="new">New</option>
+              <option value="triaged">Triaged</option>
+              <option value="planned">Planned</option>
+              <option value="done">Done</option>
+              <option value="declined">Declined</option>
+              <option value="">All</option>
+            </select>
+          </div>
+          <p class="lead mt-2">Bug reports, feature requests, and content problems from students.</p>
+          <div class="stack mt-6" id="feedback-list"></div>
+        </section>
+
+        <section id="panel-quality" class="admin-panel" hidden>
+          <h2 class="h4">Unrated questions</h2>
+          <p class="lead mt-2">
+            Published questions nobody has read for quality yet. The p-value tells you how a
+            question <em>behaves</em>; only a person can tell you how well it is <em>written</em>.
+          </p>
+          <div class="stack mt-6" id="quality-queue"></div>
+        </section>
+
+        <section id="panel-rules" class="admin-panel" hidden>
+          <h2 class="h4">Grammar rules</h2>
+          <p class="lead mt-2">
+            Coverage targets and concept difficulty. Targets drive the Coverage grid.
+            Concept difficulty sequences a study plan; it does not affect question selection.
+          </p>
+          <div class="table-wrap mt-6"><table class="table">
+            <caption class="visually-hidden">Grammar rules with coverage targets and bank completeness</caption>
+            <thead><tr>
+              <th scope="col">Rule</th><th scope="col">Domain</th>
+              <th scope="col">Concept difficulty</th>
+              <th scope="col" class="num">Published</th>
+              <th scope="col" class="num">Target</th>
+              <th scope="col">Bank completeness</th>
+              <th scope="col" class="num">Avg quality</th>
+            </tr></thead>
+            <tbody id="rules-table"></tbody>
+          </table></div>
+        </section>
+
+        <section id="panel-users" class="admin-panel" aria-labelledby="h-users" hidden>
+          <h2 class="h4" id="h-users">Users</h2>
+            <label class="visually-hidden" for="user-search">Search users</label>
+            <input class="input" type="search" id="user-search" placeholder="Search by username…" style="max-width:280px">
+            <div class="table-wrap mt-5"><table class="table">
+              <caption class="visually-hidden">Registered users</caption>
+              <thead><tr><th scope="col">Username</th><th scope="col">Name</th><th scope="col">Role</th><th scope="col">Joined</th><th scope="col"></th></tr></thead>
+              <tbody id="users-table"></tbody>
+            </table></div>
+          </section>
+
+          <section id="panel-import" class="admin-panel" hidden>
+            <h2 class="h4">Bulk import</h2>
+            <p class="lead mt-2">Paste a JSON array of question drafts. This is the pipeline Phase 2 uses to load the full bank.</p>
+            <details class="mt-4">
+              <summary class="btn btn-ghost btn-sm">Show the expected shape</summary>
+              <pre class="rich-text mt-3"><code>[{
+    "rule_id": 1,
+    "difficulty": "medium",
+    "passage": "Your original sentence with a ____ blank.",
+    "stem": "Which choice completes the text…",
+    "explanation": "Why the answer is right.",
+    "skill": "Boundaries: joining independent clauses",
+    "correct_index": 1,
+    "choices": [
+      { "body": "option A", "rationale": "why A fails" },
+      { "body": "option B", "rationale": "why B works" },
+      { "body": "option C", "rationale": "why C fails" },
+      { "body": "option D", "rationale": "why D fails" }
+    ]
+  }]</code></pre>
+            </details>
+            <div class="field mt-5">
+              <label class="label" for="import-json">Question JSON</label>
+              <textarea class="textarea mono" id="import-json" rows="14" spellcheck="false"></textarea>
+            </div>
+            <div class="row-wrap">
+              <button class="btn" type="button" id="validate-import">Validate only</button>
+              <button class="btn btn-primary" type="button" id="run-import">Import</button>
+            </div>
+            <div class="mt-5" id="import-report" aria-live="polite"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module" src="page-admin.js"></script>
+</body>
+</html>

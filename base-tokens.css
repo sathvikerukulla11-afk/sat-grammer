@@ -1,0 +1,208 @@
+/* ==========================================================================
+   Design tokens — the single source of truth for the whole interface.
+   Nothing below this file should hard-code a colour, radius, or duration.
+   ========================================================================== */
+
+:root {
+  /* ---- Brand blue ramp -------------------------------------------------- */
+  --blue-50:  #eff6ff;
+  --blue-100: #dbeafe;
+  --blue-200: #bfdbfe;
+  --blue-300: #93c5fd;
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;   /* primary */
+  --blue-700: #1d4ed8;
+  --blue-800: #1e40af;
+  --blue-900: #1e3a8a;
+  --blue-950: #172554;
+
+  /* ---- Neutral ramp ----------------------------------------------------- */
+  --gray-0:   #ffffff;
+  --gray-25:  #fcfdff;
+  --gray-50:  #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
+  --gray-950: #020617;
+
+  /* ---- Semantic ramps --------------------------------------------------- */
+  --green-50:  #ecfdf5;  --green-100: #d1fae5;
+  --green-500: #10b981;  --green-600: #059669;  --green-700: #047857;
+  --red-50:    #fef2f2;  --red-100:   #fee2e2;
+  --red-500:   #ef4444;  --red-600:   #dc2626;  --red-700:   #b91c1c;
+  --amber-50:  #fffbeb;  --amber-100: #fef3c7;
+  --amber-500: #f59e0b;  --amber-600: #d97706;
+  --violet-100:#ede9fe;  --violet-500:#8b5cf6;  --violet-600:#7c3aed;
+
+  /* ---- Difficulty colours ----------------------------------------------- */
+  --diff-easy:   var(--green-600);
+  --diff-medium: var(--blue-600);
+  --diff-hard:   var(--amber-600);
+  --diff-expert: var(--violet-600);
+
+  /* ---- Applied surface tokens (light theme is the default) -------------- */
+  --bg:            var(--gray-50);
+  --bg-elevated:   var(--gray-0);
+  --bg-sunken:     var(--gray-100);
+  --bg-inset:      var(--gray-25);
+  --surface-hover: var(--gray-100);
+
+  --text:          var(--gray-900);
+  --text-muted:    var(--gray-600);
+  --text-subtle:   var(--gray-500);
+  --text-inverse:  var(--gray-0);
+  --text-on-brand: #ffffff;
+
+  --border:        var(--gray-200);
+  --border-strong: var(--gray-300);
+
+  --brand:         var(--blue-600);
+  --brand-hover:   var(--blue-700);
+  --brand-active:  var(--blue-800);
+  --brand-subtle:  var(--blue-50);
+  --brand-border:  var(--blue-200);
+  --brand-text:    var(--blue-700);
+
+  --success:        var(--green-600);
+  --success-subtle: var(--green-50);
+  --danger:         var(--red-600);
+  --danger-subtle:  var(--red-50);
+  --warning:        var(--amber-600);
+  --warning-subtle: var(--amber-50);
+
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--brand) 40%, transparent);
+
+  /* ---- Typography -------------------------------------------------------- */
+  --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+               "Inter", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Fluid type scale — clamps so nothing needs a media query. */
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-md:   1.0625rem;
+  --text-lg:   clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem);
+  --text-xl:   clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --text-2xl:  clamp(1.5rem,  1.3rem  + 1vw,   1.875rem);
+  --text-3xl:  clamp(1.875rem, 1.5rem + 1.8vw, 2.5rem);
+  --text-4xl:  clamp(2.25rem, 1.7rem  + 2.6vw, 3.5rem);
+
+  --leading-tight: 1.2;
+  --leading-snug:  1.4;
+  --leading-normal:1.6;
+  --leading-loose: 1.75;
+
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semi:   600;
+  --weight-bold:   700;
+
+  /* Reading measure for question passages. */
+  --measure: 68ch;
+
+  /* ---- Spacing (4px base) ------------------------------------------------ */
+  --space-0:  0;
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* ---- Radii ------------------------------------------------------------- */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-xl:   20px;
+  --radius-2xl:  28px;
+  --radius-full: 9999px;
+
+  /* ---- Elevation --------------------------------------------------------- */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08), 0 2px 4px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.10), 0 4px 8px rgba(15, 23, 42, 0.04);
+  --shadow-xl: 0 24px 56px rgba(15, 23, 42, 0.14);
+  --shadow-brand: 0 8px 24px rgba(37, 99, 235, 0.22);
+
+  /* ---- Motion ------------------------------------------------------------ */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast:   120ms;
+  --dur-base:   200ms;
+  --dur-slow:   320ms;
+  --dur-slower: 500ms;
+
+  /* ---- Layout ------------------------------------------------------------ */
+  --container:      1200px;
+  --container-wide: 1440px;
+  --container-prose: 760px;
+  --header-height:  64px;
+  --sidebar-width:  248px;
+
+  --z-base: 1;
+  --z-sticky: 100;
+  --z-header: 200;
+  --z-drawer: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+}
+
+/* ---- Dark theme ---------------------------------------------------------- */
+[data-theme="dark"] {
+  --bg:            var(--gray-950);
+  --bg-elevated:   var(--gray-900);
+  --bg-sunken:     #0b1220;
+  --bg-inset:      var(--gray-900);
+  --surface-hover: var(--gray-800);
+
+  --text:          var(--gray-100);
+  --text-muted:    var(--gray-400);
+  --text-subtle:   var(--gray-500);
+  --text-inverse:  var(--gray-900);
+
+  --border:        #1e293b;
+  --border-strong: #334155;
+
+  --brand:         var(--blue-500);
+  --brand-hover:   var(--blue-400);
+  --brand-active:  var(--blue-300);
+  --brand-subtle:  rgba(59, 130, 246, 0.12);
+  --brand-border:  rgba(59, 130, 246, 0.35);
+  --brand-text:    var(--blue-300);
+
+  --success-subtle: rgba(16, 185, 129, 0.12);
+  --danger-subtle:  rgba(239, 68, 68, 0.12);
+  --warning-subtle: rgba(245, 158, 11, 0.12);
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0 24px 56px rgba(0, 0, 0, 0.7);
+  --shadow-brand: 0 8px 24px rgba(59, 130, 246, 0.25);
+
+  color-scheme: dark;
+}
+
+/* ---- User font-size preference ------------------------------------------ */
+[data-font-size="sm"] { font-size: 93.75%; }
+[data-font-size="md"] { font-size: 100%; }
+[data-font-size="lg"] { font-size: 112.5%; }
+[data-font-size="xl"] { font-size: 125%; }

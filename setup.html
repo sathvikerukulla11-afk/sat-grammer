@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font-size="md">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Setup check — SAT Grammar Lab</title>
+<meta name="description" content="Verify your Supabase connection and schema installation.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://example.com/setup.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Setup check — SAT Grammar Lab">
+<meta property="og:description" content="Verify your Supabase connection and schema installation.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="main.css">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem('satgl.theme')||'"system"');var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.dataset.fontSize=JSON.parse(localStorage.getItem('satgl.fontSize')||'"md"');}catch(e){}})();</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div id="site-header"></div>
+
+<main id="main" tabindex="-1">
+  <div class="container container-prose">
+    <div class="page-header mt-8">
+      <div>
+        <h1 class="page-header__title">Setup check</h1>
+        <p class="page-header__sub">
+          Twenty-two checks against your Supabase project. Run this after
+          installing the migrations and again after any schema change.
+        </p>
+      </div>
+      <button class="btn btn-primary" type="button" id="run-btn">Run checks</button>
+    </div>
+
+    <div class="alert alert-info mb-6">
+      <div>
+        This page is a development tool. It reads only public data and your own
+        rows — it cannot see anyone else's. Delete it before a public launch if
+        you would rather not advertise your stack.
+      </div>
+    </div>
+
+    <div id="summary" hidden></div>
+
+    <div class="stack mt-6" id="results"></div>
+
+    <section class="card mt-8">
+      <h2 class="h4">Environment</h2>
+      <dl class="stack-sm mt-4 text-sm" id="env-info"></dl>
+    </section>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module" src="page-setup.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font-size="md">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Achievements — SAT Grammar Lab</title>
+<meta name="description" content="Badges you have unlocked on SAT Grammar Lab.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://example.com/achievements.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Achievements — SAT Grammar Lab">
+<meta property="og:description" content="Badges you have unlocked on SAT Grammar Lab.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="main.css">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem('satgl.theme')||'"system"');var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.dataset.fontSize=JSON.parse(localStorage.getItem('satgl.fontSize')||'"md"');}catch(e){}})();</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div id="site-header"></div>
+
+<main id="main" tabindex="-1">
+  <div class="container">
+    <div class="page-header mt-8">
+      <div>
+        <h1 class="page-header__title">Achievements</h1>
+        <p class="page-header__sub" id="achievement-summary">—</p>
+      </div>
+    </div>
+
+    <div class="row-wrap mb-6" role="group" aria-label="Filter achievements">
+      <button class="chip" type="button" data-filter="all" aria-pressed="true">All</button>
+      <button class="chip" type="button" data-filter="unlocked" aria-pressed="false">Unlocked</button>
+      <button class="chip" type="button" data-filter="locked" aria-pressed="false">In progress</button>
+    </div>
+
+    <div class="grid grid-auto-lg" id="achievement-grid" aria-live="polite"></div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module" src="page-achievements.js"></script>
+</body>
+</html>

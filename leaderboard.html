@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font-size="md">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Leaderboard — SAT Grammar Lab</title>
+<meta name="description" content="See how you rank against other students practising SAT grammar.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://example.com/leaderboard.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Leaderboard — SAT Grammar Lab">
+<meta property="og:description" content="See how you rank against other students practising SAT grammar.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="main.css">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem('satgl.theme')||'"system"');var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.dataset.fontSize=JSON.parse(localStorage.getItem('satgl.fontSize')||'"md"');}catch(e){}})();</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div id="site-header"></div>
+
+<main id="main" tabindex="-1">
+  <div class="container">
+    <div class="page-header mt-8">
+      <div>
+        <h1 class="page-header__title">Leaderboard</h1>
+        <p class="page-header__sub">Ranked by XP earned in the period. Ten questions minimum to appear.</p>
+      </div>
+      <div class="btn-group" role="group" aria-label="Leaderboard period" id="period-picker">
+        <button class="btn" type="button" data-period="daily" aria-pressed="false">Today</button>
+        <button class="btn" type="button" data-period="weekly" aria-pressed="true">This week</button>
+        <button class="btn" type="button" data-period="monthly" aria-pressed="false">This month</button>
+        <button class="btn" type="button" data-period="all_time" aria-pressed="false">All time</button>
+      </div>
+    </div>
+
+    <div class="card card-pad-sm">
+      <div class="leader-row" style="border-bottom:1px solid var(--border);padding-bottom:var(--space-3)">
+        <span class="leader-rank text-xs subtle">#</span>
+        <span></span>
+        <span class="text-xs subtle">Student</span>
+        <span class="text-xs subtle">XP</span>
+      </div>
+      <div id="leaderboard-list" aria-live="polite"></div>
+    </div>
+
+    <p class="text-sm muted mt-4">
+      Not showing up? Leaderboard visibility is opt-in —
+      turn it on in <a href="settings.html">settings</a>.
+    </p>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module" src="page-leaderboard.js"></script>
+</body>
+</html>

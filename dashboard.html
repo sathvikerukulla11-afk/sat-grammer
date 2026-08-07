@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font-size="md">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dashboard — SAT Grammar Lab</title>
+<meta name="description" content="Your SAT grammar practice dashboard.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://example.com/dashboard.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Dashboard — SAT Grammar Lab">
+<meta property="og:description" content="Your SAT grammar practice dashboard.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="main.css">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem('satgl.theme')||'"system"');var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.dataset.fontSize=JSON.parse(localStorage.getItem('satgl.fontSize')||'"md"');}catch(e){}})();</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div id="site-header"></div>
+
+<main id="main" tabindex="-1">
+  <div class="container">
+    <section class="welcome-banner mt-8" id="welcome">
+      <div>
+        <h1 id="greeting">Welcome back</h1>
+        <p id="goal-line">Loading your progress…</p>
+      </div>
+      <a class="btn btn-lg" href="practice.html" id="continue-btn">Start practising</a>
+    </section>
+
+    <section class="grid grid-4 mt-8" id="stat-tiles" aria-label="Your statistics">
+      <div class="stat"><span class="stat__label">Questions answered</span><span class="stat__value skeleton">000</span></div>
+      <div class="stat"><span class="stat__label">Accuracy</span><span class="stat__value skeleton">00%</span></div>
+      <div class="stat"><span class="stat__label">Current streak</span><span class="stat__value skeleton">0</span></div>
+      <div class="stat"><span class="stat__label">Study time</span><span class="stat__value skeleton">0h</span></div>
+    </section>
+
+    <section class="mt-10">
+      <div class="row-between">
+        <h2 class="h3">What to work on</h2>
+        <a class="btn btn-ghost btn-sm" href="progress.html#insights">See the analysis</a>
+      </div>
+      <p class="text-sm muted mt-1">Every suggestion below says what the evidence for it is.</p>
+      <div class="mt-5" id="recommendations" aria-live="polite">
+        <div class="card"><div class="skeleton skeleton-text" style="height:60px"></div></div>
+      </div>
+    </section>
+
+    <section class="mt-10">
+      <h2 class="h3">Jump back in</h2>
+      <div class="quick-actions mt-4" id="quick-actions"></div>
+    </section>
+
+    <section class="card mt-10">
+      <div class="row-between">
+        <h2 class="h4">Goals</h2>
+        <button class="btn btn-sm" type="button" id="add-goal-btn">Set a goal</button>
+      </div>
+      <div class="mt-4" id="goals-list" aria-live="polite"></div>
+    </section>
+
+    <div class="grid grid-2 mt-10">
+      <section class="card">
+        <h2 class="h4">Today's challenge</h2>
+        <div class="mt-4" id="daily-challenge"><div class="skeleton skeleton-text"></div></div>
+      </section>
+
+      <section class="card">
+        <h2 class="h4">Where to focus</h2>
+        <p class="text-sm muted">The rules where your mastery is lowest.</p>
+        <div class="mt-4" id="weak-rules"><div class="skeleton skeleton-text"></div></div>
+      </section>
+    </div>
+
+    <div class="grid grid-2 mt-6">
+      <section class="card">
+        <div class="row-between">
+          <h2 class="h4">Recent sessions</h2>
+          <a class="btn btn-ghost btn-sm" href="progress.html">See all</a>
+        </div>
+        <div class="mt-4" id="recent-sessions"></div>
+      </section>
+
+      <section class="card">
+        <div class="row-between">
+          <h2 class="h4">Recent activity</h2>
+          <a class="btn btn-ghost btn-sm" href="review.html">History</a>
+        </div>
+        <div class="mt-4" id="recent-activity" aria-live="polite"></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module" src="page-dashboard.js"></script>
+</body>
+</html>

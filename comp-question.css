@@ -1,0 +1,300 @@
+/* ==========================================================================
+   The question card — the screen students look at for hours.
+   Priorities: legibility, unambiguous state, zero layout shift on answer.
+   ========================================================================== */
+
+.question {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.question__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-sunken);
+  font-size: var(--text-sm);
+}
+.question__counter { font-weight: var(--weight-semi); font-variant-numeric: tabular-nums; }
+.question__rule    { color: var(--text-muted); }
+
+.question__body { padding: var(--space-8) var(--space-6); }
+
+/* The passage is the reading surface: serif, generous measure, larger. */
+.passage {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  line-height: var(--leading-loose);
+  max-width: var(--measure);
+  margin-bottom: var(--space-6);
+}
+.passage .blank {
+  display: inline-block;
+  min-width: 4.5em;
+  border-bottom: 2px solid var(--brand);
+  vertical-align: baseline;
+  text-align: center;
+  font-family: var(--font-sans);
+  font-weight: var(--weight-semi);
+  color: var(--brand-text);
+  transition: background var(--dur-base) var(--ease-out);
+}
+.passage .blank[data-filled="true"] {
+  background: var(--brand-subtle);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  padding-inline: var(--space-1);
+}
+.passage em, .passage .underline {
+  text-decoration: underline;
+  text-decoration-color: var(--brand);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  font-style: normal;
+}
+
+.question__stem {
+  font-size: var(--text-md);
+  font-weight: var(--weight-medium);
+  max-width: var(--measure);
+  margin-bottom: var(--space-5);
+}
+
+/* --- Choices ------------------------------------------------------------- */
+.choices { display: grid; gap: var(--space-3); max-width: var(--measure); }
+
+.choice {
+  --choice-border: var(--border-strong);
+  --choice-bg: var(--bg-elevated);
+  --choice-key-bg: var(--bg-sunken);
+  --choice-key-fg: var(--text-muted);
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+  min-height: 56px;
+  text-align: left;
+  background: var(--choice-bg);
+  border: 1.5px solid var(--choice-border);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-base);
+  line-height: var(--leading-snug);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-out),
+              background var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
+}
+.choice:hover:not(:disabled) {
+  --choice-border: var(--brand-border);
+  --choice-bg: var(--brand-subtle);
+  transform: translateX(2px);
+}
+.choice:disabled { cursor: default; }
+
+.choice__key {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  border-radius: var(--radius-md);
+  background: var(--choice-key-bg);
+  color: var(--choice-key-fg);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  transition: background var(--dur-fast), color var(--dur-fast);
+}
+.choice__body { flex: 1; }
+.choice__mark { margin-left: auto; flex-shrink: 0; font-size: var(--text-lg); line-height: 1; }
+
+/* Selected but not yet submitted */
+.choice[aria-checked="true"] {
+  --choice-border: var(--brand);
+  --choice-bg: var(--brand-subtle);
+  --choice-key-bg: var(--brand);
+  --choice-key-fg: var(--text-on-brand);
+}
+
+/* Graded states. Colour is never the only signal: each carries a glyph
+   in .choice__mark and an sr-only label, for colour-blind users. */
+.choice[data-state="correct"] {
+  --choice-border: var(--success);
+  --choice-bg: var(--success-subtle);
+  --choice-key-bg: var(--success);
+  --choice-key-fg: #fff;
+}
+.choice[data-state="incorrect"] {
+  --choice-border: var(--danger);
+  --choice-bg: var(--danger-subtle);
+  --choice-key-bg: var(--danger);
+  --choice-key-fg: #fff;
+  animation: shake 400ms var(--ease-in-out);
+}
+.choice[data-state="dimmed"] { opacity: 0.55; }
+
+/* --- Explanation panel --------------------------------------------------- */
+.explanation {
+  margin-top: var(--space-6);
+  max-width: var(--measure);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-sunken);
+  overflow: hidden;
+  animation: fade-up var(--dur-slow) var(--ease-out) both;
+}
+.explanation__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  font-weight: var(--weight-semi);
+  border-bottom: 1px solid var(--border);
+}
+.explanation[data-result="correct"]   .explanation__head { color: var(--success); background: var(--success-subtle); }
+.explanation[data-result="incorrect"] .explanation__head { color: var(--danger);  background: var(--danger-subtle); }
+.explanation__body { padding: var(--space-5); line-height: var(--leading-loose); }
+
+.rationales { margin-top: var(--space-5); display: grid; gap: var(--space-3); }
+.rationale {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  font-size: var(--text-sm);
+}
+.rationale__key {
+  flex-shrink: 0;
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  border-radius: var(--radius-sm);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-xs);
+  background: var(--danger-subtle);
+  color: var(--danger);
+}
+.rationale[data-correct="true"] .rationale__key { background: var(--success-subtle); color: var(--success); }
+
+/* --- Footer controls ----------------------------------------------------- */
+.question__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--border);
+  background: var(--bg-sunken);
+}
+
+/* --- Session progress rail ---------------------------------------------- */
+.session-progress { display: grid; gap: var(--space-3); }
+.session-dots { display: flex; flex-wrap: wrap; gap: 5px; }
+.session-dot {
+  width: 22px; height: 22px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-sunken);
+  border: 1px solid var(--border);
+  font-size: 10px;
+  font-weight: var(--weight-semi);
+  color: var(--text-subtle);
+  display: grid; place-items: center;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.session-dot:hover { transform: scale(1.15); }
+.session-dot[data-state="correct"]   { background: var(--success); border-color: var(--success); color: #fff; }
+.session-dot[data-state="incorrect"] { background: var(--danger);  border-color: var(--danger);  color: #fff; }
+.session-dot[data-state="current"]   { border-color: var(--brand); border-width: 2px; color: var(--brand-text); }
+.session-dot[data-state="skipped"]   { background: var(--warning-subtle); border-color: var(--warning); }
+
+/* --- Timer --------------------------------------------------------------- */
+.timer {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  background: var(--bg-sunken);
+  border: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-semi);
+  font-size: var(--text-md);
+}
+.timer[data-state="warning"] { background: var(--warning-subtle); color: var(--warning); border-color: transparent; }
+.timer[data-state="danger"]  {
+  background: var(--danger-subtle); color: var(--danger); border-color: transparent;
+  animation: fade-in 900ms var(--ease-in-out) infinite alternate;
+}
+
+/* --- Keyboard hint bar --------------------------------------------------- */
+.kbd-hints {
+  display: flex; flex-wrap: wrap; gap: var(--space-4);
+  font-size: var(--text-xs); color: var(--text-subtle);
+}
+kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+/* --- Results screen ------------------------------------------------------ */
+.results-hero {
+  display: grid;
+  place-items: center;
+  gap: var(--space-3);
+  padding: var(--space-12) var(--space-6);
+  text-align: center;
+  background: linear-gradient(160deg, var(--brand-subtle), transparent 70%);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--brand-border);
+}
+.results-hero__score {
+  font-size: clamp(3rem, 10vw, 5rem);
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .question__body   { padding: var(--space-6) var(--space-4); }
+  .question__bar,
+  .question__footer { padding-inline: var(--space-4); }
+  .passage          { font-size: var(--text-md); }
+  .choice           { padding: var(--space-3) var(--space-4); }
+}
+
+/* --- Print: let students print a review sheet --------------------------- */
+@media print {
+  .site-header, .site-footer, .question__footer, .btn, .sticky-rail { display: none !important; }
+  .question { border: none; box-shadow: none; }
+  .choice   { break-inside: avoid; }
+}
+
+/* Flagged states on the session rail. A flag is not a result, so it is
+   marked with an outline and a glyph rather than a fill colour, keeping
+   the correct/incorrect fills unambiguous. */
+.session-dot[data-state="flagged"] {
+  border-color: var(--warning);
+  border-width: 2px;
+  color: var(--warning);
+  background: var(--warning-subtle);
+}
+.session-dot[data-state="current-flagged"] {
+  border-color: var(--warning);
+  border-width: 2px;
+  color: var(--brand-text);
+  box-shadow: 0 0 0 2px var(--brand-subtle);
+}

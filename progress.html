@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font-size="md">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Progress — SAT Grammar Lab</title>
+<meta name="description" content="Your SAT grammar accuracy, mastery, and study statistics.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://example.com/progress.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Progress — SAT Grammar Lab">
+<meta property="og:description" content="Your SAT grammar accuracy, mastery, and study statistics.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="main.css">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem('satgl.theme')||'"system"');var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.dataset.fontSize=JSON.parse(localStorage.getItem('satgl.fontSize')||'"md"');}catch(e){}})();</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div id="site-header"></div>
+
+<main id="main" tabindex="-1">
+  <div class="container">
+    <div class="page-header mt-8">
+      <div>
+        <h1 class="page-header__title">Progress</h1>
+        <p class="page-header__sub">Everything here is computed from your real attempts.</p>
+      </div>
+      <button class="btn btn-ghost btn-sm" type="button" id="export-btn">Export my data</button>
+    </div>
+
+    <section class="grid grid-4" aria-label="Headline statistics" id="headline-stats">
+      <div class="stat"><span class="stat__label">Answered</span><span class="stat__value skeleton">000</span></div>
+      <div class="stat"><span class="stat__label">Accuracy</span><span class="stat__value skeleton">00%</span></div>
+      <div class="stat"><span class="stat__label">Average time</span><span class="stat__value skeleton">00s</span></div>
+      <div class="stat"><span class="stat__label">Total study time</span><span class="stat__value skeleton">0h</span></div>
+    </section>
+
+    <section class="card mt-8">
+      <div class="row-between">
+        <h2 class="h4">Practice calendar</h2>
+        <div class="row text-sm muted">
+          <span id="streak-summary"></span>
+        </div>
+      </div>
+      <div class="mt-4" id="calendar"></div>
+    </section>
+
+    <section class="mt-10" id="insights">
+      <div class="page-header" style="margin-bottom:var(--space-6)">
+        <div>
+          <h2 class="h3">What your mistakes have in common</h2>
+          <p class="page-header__sub">
+            Patterns across everything you have answered — not a list of wrong answers,
+            but what they add up to.
+          </p>
+        </div>
+      </div>
+      <div id="insights-body" aria-live="polite">
+        <div class="card"><div class="skeleton skeleton-text" style="height:120px"></div></div>
+      </div>
+    </section>
+
+    <section class="mt-10">
+      <h2 class="h3">What to do next</h2>
+      <div class="mt-5" id="recommendations" aria-live="polite"></div>
+    </section>
+
+    <div class="progress-grid mt-8">
+      <section class="card">
+        <h2 class="h4">Weakest rules</h2>
+        <p class="text-sm muted">Lowest mastery, with at least five attempts.</p>
+        <div class="mt-5" id="weakest"></div>
+      </section>
+
+      <section class="card">
+        <h2 class="h4">Strongest rules</h2>
+        <p class="text-sm muted">Where you are already reliable.</p>
+        <div class="mt-5" id="strongest"></div>
+      </section>
+    </div>
+
+    <section class="card mt-8">
+      <h2 class="h4">Mastery by rule</h2>
+      <p class="text-sm muted">
+        <strong>Mastery</strong> blends lifetime accuracy with your last twenty attempts,
+        discounted until you have enough attempts for the number to mean something.
+        <strong>Topic completion</strong> is a different measure: how much of the available
+        question bank you have worked through. You can master a rule at 5% completion,
+        or reach 100% completion having mastered nothing.
+      </p>
+      <div class="table-wrap mt-5">
+        <table class="table">
+          <caption class="visually-hidden">Mastery, accuracy, and average time for each grammar rule</caption>
+          <thead>
+            <tr>
+              <th scope="col">Rule</th>
+              <th scope="col">Domain</th>
+              <th scope="col" class="num">Attempted</th>
+              <th scope="col" class="num">Accuracy</th>
+              <th scope="col" class="num">Avg. time</th>
+              <th scope="col">Mastery</th>
+              <th scope="col">Topic completion</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody id="mastery-table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card mt-8">
+      <h2 class="h4">Recent sessions</h2>
+      <div class="table-wrap mt-5">
+        <table class="table">
+          <caption class="visually-hidden">Your ten most recent completed practice sessions</caption>
+          <thead>
+            <tr>
+              <th scope="col">When</th><th scope="col">Mode</th>
+              <th scope="col" class="num">Score</th><th scope="col" class="num">Accuracy</th>
+              <th scope="col" class="num">Duration</th>
+            </tr>
+          </thead>
+          <tbody id="sessions-table"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module" src="page-progress.js"></script>
+</body>
+</html>

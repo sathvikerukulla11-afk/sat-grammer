@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font-size="md">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Practice — SAT Grammar Lab</title>
+<meta name="description" content="Practise original SAT grammar questions by rule, difficulty, or adaptively.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://example.com/practice.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Practice — SAT Grammar Lab">
+<meta property="og:description" content="Practise original SAT grammar questions by rule, difficulty, or adaptively.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="main.css">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem('satgl.theme')||'"system"');var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.dataset.fontSize=JSON.parse(localStorage.getItem('satgl.fontSize')||'"md"');}catch(e){}})();</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div id="site-header"></div>
+
+<main id="main" tabindex="-1">
+  <div class="container">
+    <!-- Step 1: configure -->
+    <section id="setup-view">
+      <div class="page-header mt-8">
+        <div>
+          <h1 class="page-header__title">Practice</h1>
+          <p class="page-header__sub">Choose what to work on, or let the engine decide.</p>
+        </div>
+        <a class="btn" href="timed.html">Timed mode →</a>
+      </div>
+
+      <div id="resume-banner" hidden></div>
+
+      <div class="split">
+        <div class="card">
+          <div class="setup-step">
+            <h2 class="setup-step__title"><span class="setup-step__num">1</span> Practice mode</h2>
+            <div class="row-wrap" role="group" aria-label="Practice mode" id="mode-picker">
+              <button class="chip" type="button" data-mode="adaptive" aria-pressed="true">Adaptive</button>
+              <button class="chip" type="button" data-mode="mixed" aria-pressed="false">Mixed</button>
+              <button class="chip" type="button" data-mode="rule" aria-pressed="false">By rule</button>
+              <button class="chip" type="button" data-mode="difficulty" aria-pressed="false">By difficulty</button>
+              <button class="chip" type="button" data-mode="review" aria-pressed="false">Review missed</button>
+              <button class="chip" type="button" data-mode="bookmarks" aria-pressed="false">Bookmarked</button>
+            </div>
+            <p class="field__help mt-2" id="mode-description">
+              Adaptive picks your weakest rules and matches the difficulty to your current mastery.
+            </p>
+          </div>
+
+          <div class="setup-step" id="rule-step" hidden>
+            <h2 class="setup-step__title"><span class="setup-step__num">2</span> Grammar rules</h2>
+            <div class="row-wrap mb-2">
+              <button class="btn btn-ghost btn-sm" type="button" id="select-all-rules">Select all</button>
+              <button class="btn btn-ghost btn-sm" type="button" id="clear-rules">Clear</button>
+            </div>
+            <div class="rule-picker mt-3" id="rule-picker" role="group" aria-label="Grammar rules"></div>
+          </div>
+
+          <div class="setup-step" id="difficulty-step">
+            <h2 class="setup-step__title"><span class="setup-step__num">3</span> Difficulty</h2>
+            <div class="row-wrap" role="group" aria-label="Difficulty" id="difficulty-picker">
+              <button class="chip" type="button" data-difficulty="easy" aria-pressed="false">Easy</button>
+              <button class="chip" type="button" data-difficulty="medium" aria-pressed="false">Medium</button>
+              <button class="chip" type="button" data-difficulty="hard" aria-pressed="false">Hard</button>
+              <button class="chip" type="button" data-difficulty="expert" aria-pressed="false">Expert</button>
+            </div>
+            <p class="field__help mt-2">Leave all unselected to draw from every difficulty.</p>
+          </div>
+
+          <div class="setup-step">
+            <h2 class="setup-step__title"><span class="setup-step__num">4</span> Set length</h2>
+            <div class="btn-group" role="group" aria-label="Number of questions" id="length-picker">
+              <button class="btn" type="button" data-length="5" aria-pressed="false">5</button>
+              <button class="btn" type="button" data-length="10" aria-pressed="false">10</button>
+              <button class="btn" type="button" data-length="20" aria-pressed="true">20</button>
+              <button class="btn" type="button" data-length="30" aria-pressed="false">30</button>
+              <button class="btn" type="button" data-length="50" aria-pressed="false">50</button>
+            </div>
+            <label class="check mt-4">
+              <input type="checkbox" id="exclude-seen" checked>
+              <span>Skip questions I answered in the last 30 days</span>
+            </label>
+            <label class="check">
+              <input type="checkbox" id="instant-feedback" checked>
+              <span>Show the explanation right after each answer</span>
+            </label>
+          </div>
+
+          <button class="btn btn-primary btn-lg btn-block mt-6" type="button" id="start-btn">
+            Start practising
+          </button>
+        </div>
+
+        <aside class="sticky-rail stack">
+          <div class="card card-pad-sm">
+            <h2 class="h5">Your set</h2>
+            <dl class="stack-sm mt-3 text-sm" id="set-summary"></dl>
+          </div>
+          <div class="card card-pad-sm">
+            <h2 class="h5">Keyboard</h2>
+            <div class="kbd-hints mt-3" style="flex-direction:column;gap:var(--space-2)">
+              <span><kbd>A</kbd>–<kbd>D</kbd> choose an answer</span>
+              <span><kbd>Enter</kbd> check, then next</span>
+              <span><kbd>S</kbd> skip &nbsp; <kbd>B</kbd> bookmark</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Step 2: the session -->
+    <section id="session-view" hidden>
+      <div class="split mt-8">
+        <div>
+          <div id="question-container" aria-live="polite" aria-busy="true"></div>
+        </div>
+
+        <aside class="sticky-rail stack">
+          <div class="card card-pad-sm session-progress">
+            <div class="row-between">
+              <h2 class="h5">Progress</h2>
+              <span class="text-sm muted tabular" id="progress-count">0 / 0</span>
+            </div>
+            <div class="progress"><div class="progress__fill" id="progress-fill" style="width:0%"></div></div>
+            <div class="session-dots" id="session-dots" role="list" aria-label="Question results"></div>
+            <div class="row-between text-sm mt-2">
+              <span class="muted">Accuracy</span>
+              <strong class="tabular" id="live-accuracy">—</strong>
+            </div>
+          </div>
+
+          <button class="btn btn-ghost btn-block" type="button" id="end-session-btn">End session</button>
+          <button class="btn btn-ghost btn-sm btn-block" type="button" id="report-btn">Report a problem</button>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Step 3: results -->
+    <section id="results-view" hidden>
+      <div id="results-container" class="mt-8"></div>
+    </section>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module" src="page-practice.js"></script>
+</body>
+</html>
