@@ -20,7 +20,8 @@ const path = pageUrl;
 const PUBLIC_NAV = [
   { href: R.CHEATSHEETS, label: 'Cheat Sheets' },
   { href: R.RULES, label: 'Grammar Rules' },
-  { href: R.LEADERBOARD, label: 'Leaderboard' }
+  { href: R.LEADERBOARD, label: 'Leaderboard' },
+  { href: R.PRICING, label: 'Pricing' }
 ];
 
 const PRIVATE_NAV = [
@@ -164,6 +165,7 @@ function buildFooter() {
             h('li', {}, h('a', { href: path(R.PRACTICE) }, 'Practice sets')),
             h('li', {}, h('a', { href: path(R.TIMED) }, 'Timed mode')),
             h('li', {}, h('a', { href: path(R.CHEATSHEETS) }, 'Cheat sheets')),
+            h('li', {}, h('a', { href: path(R.PRICING) }, 'Pricing')),
             h('li', {}, h('a', { href: path(R.RULES) }, 'Grammar rules')),
             h('li', {}, h('a', { href: path(R.REVIEW) }, 'Review missed'))
           )

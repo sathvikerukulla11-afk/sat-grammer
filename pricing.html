@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font-size="md">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Upgrade to Premium — SAT Grammar Lab</title>
+<meta name="description" content="Unlock premium SAT grammar cheat sheets: named trap patterns, decision diagrams, mnemonics, mini quizzes and mastery checkpoints.">
+<link rel="canonical" href="https://example.com/pricing.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Upgrade to Premium — SAT Grammar Lab">
+<meta property="og:description" content="Unlock premium SAT grammar cheat sheets: named trap patterns, decision diagrams, mnemonics, mini quizzes and mastery checkpoints.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="main.css">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem('satgl.theme')||'"system"');var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.dataset.fontSize=JSON.parse(localStorage.getItem('satgl.fontSize')||'"md"');}catch(e){}})();</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<div id="site-header"></div>
+<main id="main" tabindex="-1">
+  <div class="container" data-accent="gold">
+    <section class="hero" style="padding-block:var(--space-16) var(--space-8)">
+      <p class="eyebrow">✨ Premium</p>
+      <h1 class="hero__title">Premium is coming soon.</h1>
+      <p class="hero__sub">
+        Everything that is free today stays free forever: all 33 grammar rules,
+        151 original questions, timed practice, mistake analysis, and every free
+        cheat sheet — no login required to read them. Premium will add advanced
+        strategy material on top. It is not on sale yet.
+      </p>
+    </section>
+
+    <div class="plan-grid mt-8">
+      <section class="plan" aria-labelledby="plan-free">
+        <h2 class="plan__name" id="plan-free">Free</h2>
+        <div class="plan__price">$0<span class="plan__period"> / forever</span></div>
+        <ul class="plan__list" role="list">
+          <li>All 33 grammar rules</li>
+          <li>151 original practice questions</li>
+          <li>Free cheat sheets</li>
+          <li>Timed practice and review queue</li>
+          <li>Mistake analysis and recommendations</li>
+          <li>Streaks, achievements, leaderboard</li>
+        </ul>
+        <a class="btn btn-block" href="cheatsheets.html">Read the free cheat sheets</a>
+      </section>
+
+      <section class="plan" data-featured="true" aria-labelledby="plan-premium">
+        <span class="cs-badge-premium">✨ PREMIUM</span>
+        <h2 class="plan__name mt-3" id="plan-premium">Premium</h2>
+        <div class="plan__price">Coming soon<span class="plan__period"> — pricing not set</span></div>
+        <ul class="plan__list" role="list">
+          <li>Everything in Free</li>
+          <li>Premium cheat sheets: advanced strategy per rule</li>
+          <li>The recurring trap patterns, named and explained</li>
+          <li>Visual decision diagrams</li>
+          <li>Mnemonics and exam-day checklists</li>
+          <li>Mini quizzes and mastery checkpoints</li>
+          <li>Difficulty breakdowns per rule</li>
+          <li data-soon="true">Exclusive question banks — coming soon</li>
+          <li data-soon="true">Reading and math practice — coming soon</li>
+          <li data-soon="true">Full-length adaptive tests — coming soon</li>
+          <li data-soon="true">AI tutor and study plans — coming soon</li>
+        </ul>
+        <button class="btn btn-premium btn-block btn-lg" type="button" id="checkout-btn">
+          Upgrade to Premium
+        </button>
+        <p class="text-sm muted mt-3 text-center">
+          Premium is not on sale yet. No card is collected and no payment
+          provider is connected — this page is the placeholder the checkout
+          will slot into later.
+        </p>
+        <p class="text-xs subtle mt-3 text-center" id="checkout-note"></p>
+      </section>
+    </div>
+
+    <section class="container-prose section" id="access-code" aria-labelledby="h-code">
+      <div class="card">
+        <h2 class="h4" id="h-code">Have an access code?</h2>
+        <p class="muted mt-2">
+          If a teacher or tutor gave you a code, enter it here. Submitting a code
+          does not switch premium on by itself — it sends a request that an
+          administrator reviews.
+        </p>
+        <form class="row-wrap mt-5" id="code-redeem-form">
+          <label class="visually-hidden" for="redeem-code">Access code</label>
+          <input class="input" type="text" id="redeem-code" name="code"
+                 placeholder="SGL-XXXXXXXX" maxlength="32" required
+                 autocomplete="off" autocapitalize="characters" spellcheck="false"
+                 style="max-width:260px; text-transform:uppercase">
+          <button class="btn btn-premium" type="submit" id="redeem-btn">Submit code</button>
+        </form>
+        <div class="mt-4" id="redeem-state" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section" id="what-you-get">
+      <h2 class="h3 text-center">What premium adds</h2>
+      <div class="grid grid-auto mt-8" id="feature-grid"></div>
+    </section>
+
+    <section class="container-prose text-center section">
+      <h2 class="h4">Questions</h2>
+      <div class="stack mt-6" style="text-align:left">
+        <details class="card"><summary class="card__title">Does anything free become paid?</summary>
+          <p class="muted mt-3">No. The free cheat sheets, all 151 questions, and every
+          practice and analytics feature stay free. Premium is additional material,
+          not a fence around what already exists.</p></details>
+        <details class="card"><summary class="card__title">Can I cancel?</summary>
+          <p class="muted mt-3">Yes, at any time. Access runs to the end of the period
+          you have paid for, then the premium sheets lock again. Nothing you have
+          answered or learned is removed.</p></details>
+        <details class="card"><summary class="card__title">Is my progress affected?</summary>
+          <p class="muted mt-3">No. Attempts, mastery, streaks and statistics are the
+          same records either way.</p></details>
+      </div>
+    </section>
+
+    <p class="text-xs subtle text-center section">
+      SAT is a trademark registered by the College Board, which is not affiliated
+      with and does not endorse this site. Every question and cheat sheet here is
+      original work written for SAT Grammar Lab.
+    </p>
+  </div>
+</main>
+<div id="site-footer"></div>
+<script type="module" src="page-pricing.js"></script>
+</body>
+</html>

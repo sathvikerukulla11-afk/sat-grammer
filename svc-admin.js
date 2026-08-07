@@ -212,13 +212,22 @@ export async function getCoverage() {
 }
 
 export async function listUsers({ search = '', limit = 50 } = {}) {
-  let query = supabase
-    .from('profiles')
-    .select('id, username, display_name, role, created_at, is_public, banned_until')
-    .order('created_at', { ascending: false })
-    .limit(limit);
-  if (search) query = query.ilike('username', `%${search}%`);
-  return unwrap(await query);
+  // Goes through an RPC rather than a table select because email lives in
+  // auth.users, which PostgREST does not expose. The function is admin-only
+  // and joins the two, so emails never reach a non-admin client.
+  const { data, error } = await supabase.rpc('admin_list_users',
+    { p_search: search, p_limit: limit });
+  if (error) throw error;
+  return data || [];
+}
+
+/** Grant or revoke premium directly, outside the request queue. */
+export async function setUserPremium(userId, isPremium, until = null) {
+  const { data, error } = await supabase.rpc('set_premium', {
+    p_user_id: userId, p_is_premium: isPremium, p_until: until
+  });
+  if (error) throw error;
+  return data;
 }
 
 export async function setUserRole(userId, role) {
@@ -391,4 +400,64 @@ export async function getQuestionTags(questionId) {
       .eq('question_id', questionId)
   );
   return rows.map((row) => row.tag);
+}
+
+/* ==========================================================================
+   Premium access: codes and the approval queue.
+
+   Every one of these is a SECURITY DEFINER RPC that re-checks is_admin()
+   server-side. Nothing here is load-bearing for security — it decides what
+   the dashboard shows, not what the database will do.
+   ========================================================================== */
+
+export async function listPremiumCodes() {
+  const { data, error } = await supabase.rpc('admin_list_premium_codes');
+  if (error) throw error;
+  return data || [];
+}
+
+export async function createPremiumCode({
+  code = null, maxUses = 1, expiresAt = null, grantDays = null, note = null
+} = {}) {
+  const { data, error } = await supabase.rpc('admin_create_premium_code', {
+    p_code: code || null,
+    p_max_uses: Number(maxUses) || 1,
+    p_expires_at: expiresAt || null,
+    p_grant_days: grantDays ? Number(grantDays) : null,
+    p_note: note || null
+  });
+  if (error) throw error;
+  return data;
+}
+
+export async function setCodeActive(id, active) {
+  const { data, error } = await supabase.rpc('admin_set_code_active',
+    { p_id: id, p_active: active });
+  if (error) throw error;
+  return data;
+}
+
+export async function deletePremiumCode(id) {
+  const { data, error } = await supabase.rpc('admin_delete_premium_code', { p_id: id });
+  if (error) throw error;
+  return data;
+}
+
+export async function listPremiumRequests(status = null) {
+  const { data, error } = await supabase.rpc('admin_list_premium_requests',
+    { p_status: status });
+  if (error) throw error;
+  return data || [];
+}
+
+/** The only client-side path that can turn premium on. Admin-gated in SQL. */
+export async function reviewPremiumRequest(id, approve, { days = null, note = null } = {}) {
+  const { data, error } = await supabase.rpc('review_premium_request', {
+    p_request_id: id,
+    p_approve: approve,
+    p_days: days ? Number(days) : null,
+    p_note: note || null
+  });
+  if (error) throw error;
+  return data;
 }

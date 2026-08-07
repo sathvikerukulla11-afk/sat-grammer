@@ -41,10 +41,18 @@
 .full-width    { width: 100%; }
 .no-scroll     { overflow: hidden; }
 
-.mt-2 { margin-top: var(--space-2); }
-.mt-4 { margin-top: var(--space-4); }
-.mt-6 { margin-top: var(--space-6); }
-.mt-8 { margin-top: var(--space-8); }
+.mt-1  { margin-top: var(--space-1); }
+.mt-2  { margin-top: var(--space-2); }
+.mt-3  { margin-top: var(--space-3); }
+.mt-4  { margin-top: var(--space-4); }
+.mt-5  { margin-top: var(--space-5); }
+.mt-6  { margin-top: var(--space-6); }
+.mt-8  { margin-top: var(--space-8); }
+.mt-10 { margin-top: var(--space-10); }
+
+.mb-4 { margin-bottom: var(--space-4); }
+.mb-6 { margin-bottom: var(--space-6); }
+.mb-8 { margin-bottom: var(--space-8); }
 
 @media (max-width: 767px) { .hide-mobile  { display: none !important; } }
 @media (min-width: 768px) { .hide-desktop { display: none !important; } }
@@ -73,3 +81,7 @@
 /* Section background tint, used to band the landing page. */
 .bg-sunken   { background: var(--bg-sunken); }
 .bg-elevated { background: var(--bg-elevated); }
+
+/* Status text colours, for the places a badge would be too heavy. */
+.text-error   { color: var(--danger); }
+.text-success { color: var(--success); }

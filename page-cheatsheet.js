@@ -7,6 +7,8 @@ import { isSignedIn } from './core-auth.js';
 import { submitAnswer } from './svc-practice.js';
 import { toastSuccess, toastError } from './ui-toast.js';
 import { section, exampleCard, bindReadingProgress, FREQUENCY_LABEL } from './ui-cheatsheet.js';
+import { UPGRADE_URL } from './svc-premium.js';
+import { lockedScreen, premiumSections } from './ui-premium.js';
 
 await mountShell();
 
@@ -23,8 +25,19 @@ try {
   throw new Error('not found');
 }
 
+// A locked premium sheet arrives as a cover only. There is no body
+// content in the payload to hide — the server never sent any.
+if (data.locked) {
+  const cover = data.cover || {};
+  document.title = `${cover.title || 'Premium'} — SAT Grammar Lab`;
+  document.documentElement.dataset.accent = 'gold';
+  render($('#cs-body'), lockedScreen(cover, data.upgrade_url || UPGRADE_URL));
+  bindReadingProgress($('#cs-read-progress'));
+  throw new Error('locked');
+}
+
 const { rule, sheet, practice, progress, mastery, related, prev, next } = data;
-document.title = `${rule.name} — SAT Grammar Lab`;
+document.title = `${(sheet && sheet.title) || rule.name} — SAT Grammar Lab`;
 
 // Not every rule has a sheet written yet. Say so, rather than rendering
 // an elegant page with nothing in it.
@@ -204,7 +217,11 @@ render($('#cs-body'),
     practiceCard(),
 
     section('⚡', '30-second recap',
-      h('ol.cs-recap', {}, (sheet.recap || []).map((r) => h('li', {}, r))))),
+      h('ol.cs-recap', {}, (sheet.recap || []).map((r) => h('li', {}, r)))),
+
+    // Premium-only sections. Present only when the server actually sent
+    // them, which it does only for an entitled reader.
+    ...premiumSections(sheet)),
 
   understand,
 

@@ -18,6 +18,20 @@ if (!await requireAuth({ staffOnly: true })) throw new Error('redirecting');
 
 const rules = await getRules();
 
+/* ---- admin-only sections --------------------------------------------------
+ * The dashboard as a whole is staff-accessible, because authors and
+ * moderators need the question bank. Premium access is narrower: it moves
+ * money and entitlements, so it is admin-only.
+ *
+ * Hiding the tab is courtesy, not security. Every premium RPC re-checks
+ * is_admin() in SQL, so a moderator who unhides this by hand gets a
+ * permission error from Postgres rather than a working panel.
+ */
+if (!isAdmin()) {
+  document.querySelector('[data-panel="premium"]')?.remove();
+  document.getElementById('panel-premium')?.remove();
+}
+
 /* ---- panel switching ------------------------------------------------------ */
 const panels = $$('.admin-panel');
 $$('.sidebar .nav__link').forEach((link) => link.addEventListener('click', () => {
@@ -502,12 +516,42 @@ async function loadUsers() {
   const rows = await admin.listUsers({ search: $('#user-search').value.trim() });
   render($('#users-table'), rows.map((user) =>
     h('tr', {},
-      h('th', { scope: 'row' }, `@${user.username}`),
-      h('td', {}, user.display_name || '—'),
+      h('th', { scope: 'row' },
+        h('div', {}, `@${user.username}`),
+        // Email comes from auth.users via an admin-only RPC. It is the same
+        // address the premium request queue shows, so the two panels can be
+        // cross-referenced.
+        h('div.text-xs.muted', {}, user.email || 'no email on file')),
+
+      h('td', {},
+        h('div', {}, user.display_name || '—'),
+        user.pending_requests
+          ? h('span.badge.badge-warning', {},
+              `${user.pending_requests} pending`)
+          : null),
+
       h('td', {}, h('span.badge', {
         class: user.role === 'admin' ? 'badge-brand' : ''
       }, titleCase(user.role))),
+
+      h('td', {},
+        // is_premium can be true while premium_until has passed. Showing a
+        // plain green badge there would be a lie.
+        user.premium_active
+          ? h('span.badge.badge-success', {}, user.premium_until
+              ? `Premium to ${dateShort(user.premium_until)}` : 'Premium')
+          : user.is_premium
+            ? h('span.badge.badge-danger', {}, `Expired ${dateShort(user.premium_until)}`)
+            : h('span.muted.text-xs', {}, 'Free'),
+        isAdmin()
+          ? h('div.mt-2', {}, h('button.btn.btn-sm', {
+              type: 'button',
+              onclick: () => togglePremium(user)
+            }, user.is_premium ? 'Revoke' : 'Grant'))
+          : null),
+
       h('td', {}, dateShort(user.created_at)),
+
       h('td', {}, isAdmin()
         ? h('select.select.btn-sm', {
             'aria-label': `Role for ${user.username}`,
@@ -525,6 +569,67 @@ async function loadUsers() {
             h('option', { value: role, selected: role === user.role }, titleCase(role))))
         : h('span.subtle.text-xs', {}, 'Admin only')))));
 }
+
+/**
+ * The direct grant, separate from the request queue.
+ *
+ * An admin needs this for the cases the queue cannot cover: comping an
+ * account, fixing a mistaken rejection, or granting themselves premium —
+ * which review_premium_request() deliberately refuses to do.
+ */
+async function togglePremium(user) {
+  if (user.is_premium) {
+    const ok = await confirmDialog({
+      title: `Revoke premium for @${user.username}?`,
+      message: 'They keep every free cheat sheet, all 151 questions, and all of their progress. Only the premium sheets lock again.',
+      confirmLabel: 'Revoke',
+      danger: true
+    });
+    if (!ok) return;
+    try {
+      await admin.setUserPremium(user.id, false, null);
+      toastWarning(`Premium revoked for @${user.username}.`);
+      await loadUsers();
+    } catch (err) { toastError(err.message); }
+    return;
+  }
+
+  const daysInput = h('input.input', {
+    type: 'number', min: '1', max: '3650', id: 'grant-days',
+    placeholder: 'Blank = never expires'
+  });
+
+  openModal({
+    title: `Grant premium to @${user.username}?`,
+    body: h('div.stack', {},
+      h('p.muted', {}, user.email || 'No email on file for this account.'),
+      h('div.field', {},
+        h('label.field__label', { for: 'grant-days' }, 'Premium lasts (days)'),
+        daysInput,
+        h('p.field__help', {}, 'This bypasses the request queue. Use it for comps and corrections.'))),
+    actions: [
+      { label: 'Cancel' },
+      {
+        label: 'Grant', variant: 'btn-primary',
+        onClick: () => ({ days: daysInput.value.trim() })
+      }
+    ],
+    onClose: async (value) => {
+      if (!value || typeof value !== 'object') return;
+      const until = value.days
+        ? new Date(Date.now() + Number(value.days) * 86400000).toISOString()
+        : null;
+      try {
+        await admin.setUserPremium(user.id, true, until);
+        toastSuccess(until
+          ? `@${user.username} has premium until ${dateShort(until)}.`
+          : `@${user.username} has premium with no expiry.`);
+        await loadUsers();
+      } catch (err) { toastError(err.message); }
+    }
+  });
+}
+
 
 let userSearchTimer;
 $('#user-search').addEventListener('input', () => {
@@ -823,6 +928,288 @@ async function loadFeedback() {
 
 $('#feedback-state').addEventListener('change', loadFeedback);
 
+/* ================================================================== */
+/* Premium access: codes and the approval queue                       */
+/* ================================================================== */
+
+let reqFilter = 'pending';
+
+$$('[data-req-filter]').forEach((chip) => chip.addEventListener('click', () => {
+  reqFilter = chip.dataset.reqFilter;
+  $$('[data-req-filter]').forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+  loadRequests();
+}));
+
+async function loadPremium() {
+  if (!isAdmin() || !$('#panel-premium')) return;
+  await Promise.all([loadRequests(), loadCodes()]);
+}
+
+/* ---- requests ----------------------------------------------------- */
+async function loadRequests() {
+  const body = $('#requests-table');
+  render(body, h('tr', {}, h('td', { colspan: '5' }, h('span.muted', {}, 'Loading…'))));
+
+  let rows;
+  try {
+    rows = await admin.listPremiumRequests(reqFilter === 'all' ? null : reqFilter);
+  } catch (err) {
+    render(body, h('tr', {}, h('td', { colspan: '5' },
+      h('span.text-error', {}, err.message))));
+    return;
+  }
+
+  $('#req-count').textContent = rows.length
+    ? `${rows.length} ${reqFilter === 'all' ? 'total' : reqFilter}`
+    : '';
+
+  if (!rows.length) {
+    render(body, h('tr', {}, h('td', { colspan: '5' },
+      h('span.muted', {}, reqFilter === 'pending'
+        ? 'Nothing waiting for review.'
+        : `No ${reqFilter} requests.`))));
+    return;
+  }
+
+  render(body, rows.map(requestRow));
+}
+
+function requestRow(r) {
+  const pending = r.status === 'pending';
+
+  return h('tr', {},
+    h('td', {},
+      h('div', {}, r.email),
+      h('div.text-xs.muted', {}, `@${r.username}`),
+      r.user_is_premium ? h('span.badge.badge-success', {}, 'premium') : null),
+
+    h('td', {}, h('code', {}, r.code_used)),
+
+    h('td', {},
+      h('div', {}, dateShort(r.created_at)),
+      h('div.text-xs.muted', {}, relativeTime(r.created_at))),
+
+    h('td', {},
+      h(`span.badge.badge-${
+        { pending: 'warning', approved: 'success', rejected: 'danger' }[r.status]
+      }`, {}, titleCase(r.status)),
+      r.reviewed_at
+        ? h('div.text-xs.muted.mt-1', {},
+            `by ${r.reviewer || 'unknown'} · ${relativeTime(r.reviewed_at)}`)
+        : null,
+      r.granted_until
+        ? h('div.text-xs.muted', {}, `until ${dateShort(r.granted_until)}`)
+        : (r.status === 'approved' ? h('div.text-xs.muted', {}, 'no expiry') : null),
+      r.review_note ? h('div.text-xs.muted.mt-1', {}, r.review_note) : null),
+
+    h('td', {}, pending
+      // An admin reviewing their own request is refused by the database.
+      // Saying so here beats letting them click and read a stack trace.
+      ? (r.is_self
+          ? h('span.text-xs.muted', {}, 'Your own request — another admin must review it.')
+          : h('div.row-wrap', {},
+              h('button.btn.btn-sm.btn-primary', {
+                type: 'button', onclick: () => approve(r)
+              }, 'Approve'),
+              h('button.btn.btn-sm.btn-danger', {
+                type: 'button', onclick: () => reject(r)
+              }, 'Reject')))
+      : h('span.text-xs.muted', {}, '—')));
+}
+
+async function approve(r) {
+  const days = await askDays(r);
+  if (days === null) return;                     // cancelled
+
+  try {
+    const out = await admin.reviewPremiumRequest(r.id, true,
+      { days: days.days, note: days.note });
+    toastSuccess(out.granted_until
+      ? `${r.email} has premium until ${dateShort(out.granted_until)}.`
+      : `${r.email} has premium with no expiry.`);
+    await loadPremium();
+  } catch (err) {
+    toastError(err.message);
+  }
+}
+
+async function reject(r) {
+  const ok = await confirmDialog({
+    title: 'Reject this request?',
+    message: `${r.email} stays on the free plan. The code is not consumed, so it can be used by someone else.`,
+    confirmLabel: 'Reject',
+    danger: true
+  });
+  if (!ok) return;
+
+  try {
+    await admin.reviewPremiumRequest(r.id, false);
+    toastWarning(`Request from ${r.email} rejected.`);
+    await loadPremium();
+  } catch (err) {
+    toastError(err.message);
+  }
+}
+
+/**
+ * Approval needs a duration. The code may carry a default; the admin can
+ * override it here, which is the whole point of reviewing by hand.
+ */
+function askDays(r) {
+  return new Promise((resolve) => {
+    const daysInput = h('input.input', {
+      type: 'number', min: '1', max: '3650', id: 'approve-days',
+      value: r.code_grant_days ?? '',
+      placeholder: 'Blank = never expires'
+    });
+    const noteInput = h('input.input', {
+      type: 'text', maxlength: '300', id: 'approve-note',
+      placeholder: 'Optional note on the decision'
+    });
+
+    openModal({
+      title: `Approve ${r.email}?`,
+      body: h('div.stack', {},
+        h('p.muted', {}, r.code_grant_days
+          ? `The code ${r.code_used} suggests ${r.code_grant_days} days. Change it if you like.`
+          : `The code ${r.code_used} carries no default length.`),
+        h('div.field', {},
+          h('label.field__label', { for: 'approve-days' }, 'Premium lasts (days)'),
+          daysInput,
+          h('p.field__help', {}, 'Leave blank to grant premium with no expiry date.')),
+        h('div.field', {},
+          h('label.field__label', { for: 'approve-note' }, 'Note (optional)'),
+          noteInput)),
+      actions: [
+        { label: 'Cancel' },
+        {
+          label: 'Approve',
+          variant: 'btn-primary',
+          // openModal closes for us and passes whatever this returns to
+          // onClose, so the payload travels as the dialog's result.
+          onClick: () => {
+            const raw = daysInput.value.trim();
+            return { days: raw === '' ? null : Number(raw), note: noteInput.value.trim() };
+          }
+        }
+      ],
+      // Cancel resolves to `true`, the close button and Esc to `null`.
+      // Only the Approve action produces an object.
+      onClose: (value) => resolve(value && typeof value === 'object' ? value : null)
+    });
+  });
+}
+
+/* ---- codes -------------------------------------------------------- */
+async function loadCodes() {
+  const body = $('#codes-table');
+  render(body, h('tr', {}, h('td', { colspan: '6' }, h('span.muted', {}, 'Loading…'))));
+
+  let rows;
+  try {
+    rows = await admin.listPremiumCodes();
+  } catch (err) {
+    render(body, h('tr', {}, h('td', { colspan: '6' },
+      h('span.text-error', {}, err.message))));
+    return;
+  }
+
+  if (!rows.length) {
+    render(body, h('tr', {}, h('td', { colspan: '6' },
+      h('span.muted', {}, 'No codes yet. Create one above.'))));
+    return;
+  }
+
+  render(body, rows.map(codeRow));
+}
+
+function codeRow(c) {
+  // "Active" is the switch you control. Expired and exhausted are facts
+  // about the code that no longer depend on the switch, so they are shown
+  // separately rather than collapsed into one boolean.
+  const dead = !c.active || c.expired || c.exhausted;
+
+  return h('tr', { style: dead ? { opacity: '0.6' } : {} },
+    h('td', {},
+      h('code', { style: { fontSize: 'var(--text-md)' } }, c.code),
+      c.note ? h('div.text-xs.muted', {}, c.note) : null,
+      h('div.text-xs.muted', {}, `created ${dateShort(c.created_at)}`)),
+
+    h('td', {},
+      h('span', {}, `${c.current_uses} / ${c.max_uses}`),
+      c.pending_count
+        ? h('div.text-xs.muted', {}, `${c.pending_count} pending`)
+        : null),
+
+    h('td', {}, c.grant_days ? `${c.grant_days} days` : h('span.muted', {}, 'no expiry')),
+
+    h('td', {}, c.expires_at ? dateShort(c.expires_at) : h('span.muted', {}, '—')),
+
+    h('td', {},
+      c.exhausted ? h('span.badge.badge-danger', {}, 'Used up')
+      : c.expired ? h('span.badge.badge-danger', {}, 'Expired')
+      : c.active  ? h('span.badge.badge-success', {}, 'Active')
+                  : h('span.badge', {}, 'Disabled')),
+
+    h('td', {}, h('div.row-wrap', {},
+      h('button.btn.btn-sm', {
+        type: 'button',
+        onclick: async () => {
+          try {
+            await admin.setCodeActive(c.id, !c.active);
+            toastSuccess(`${c.code} ${c.active ? 'disabled' : 'enabled'}.`);
+            await loadCodes();
+          } catch (err) { toastError(err.message); }
+        }
+      }, c.active ? 'Disable' : 'Enable'),
+
+      h('button.btn.btn-sm.btn-danger', {
+        type: 'button',
+        onclick: async () => {
+          const ok = await confirmDialog({
+            title: `Delete ${c.code}?`,
+            message: 'The code stops working immediately. Requests that used it keep their history.',
+            confirmLabel: 'Delete',
+            danger: true
+          });
+          if (!ok) return;
+          try {
+            await admin.deletePremiumCode(c.id);
+            toastSuccess(`${c.code} deleted.`);
+            await loadPremium();
+          } catch (err) { toastError(err.message); }
+        }
+      }, 'Delete'))));
+}
+
+$('#code-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = $('#create-code-btn');
+  btn.disabled = true;
+
+  try {
+    const expires = $('#c-expires').value;
+    const created = await admin.createPremiumCode({
+      code: $('#c-code').value.trim() || null,
+      maxUses: $('#c-max-uses').value,
+      // A date input gives a bare day. Grant the whole of it by expiring at
+      // the end rather than at midnight when it starts.
+      expiresAt: expires ? new Date(`${expires}T23:59:59`).toISOString() : null,
+      grantDays: $('#c-grant-days').value || null,
+      note: $('#c-note').value.trim() || null
+    });
+    toastSuccess(`Code ${created.code} created.`);
+    $('#code-form').reset();
+    $('#c-max-uses').value = '1';
+    await loadCodes();
+  } catch (err) {
+    toastError(err.message);
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+
 const LOADERS = {
   questions: loadQuestions,
   coverage: loadCoverage,
@@ -831,7 +1218,8 @@ const LOADERS = {
   feedback: loadFeedback,
   quality: loadQualityQueue,
   rules: loadRulesPanel,
-  users: loadUsers
+  users: loadUsers,
+  premium: loadPremium
 };
 
 await loadQuestions();

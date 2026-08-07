@@ -5,6 +5,7 @@ import { pct, titleCase } from './core-format.js';
 import { listCheatSheets } from './svc-cheatsheets.js';
 import { isSignedIn } from './core-auth.js';
 import { FREQUENCY_LABEL } from './ui-cheatsheet.js';
+import { UPGRADE_URL } from './svc-premium.js';
 
 await mountShell();
 
@@ -22,7 +23,7 @@ try {
 
 /* ---- overall progress -------------------------------------------------- */
 function drawOverall() {
-  const withSheet = sheets.filter((s) => s.has_sheet);
+  const withSheet = sheets.filter((s) => s.has_sheet && s.tier !== 'premium');
   const done = withSheet.filter((s) => s.completed).length;
   if (!withSheet.length || !isSignedIn()) return render($('#cs-overall'));
 
@@ -58,14 +59,17 @@ $('#cs-search').addEventListener('input', (e) => {
 function visible() {
   return sheets.filter((s) => {
     if (query && !`${s.name} ${s.summary} ${s.memory_trick || ''}`.toLowerCase().includes(query)) return false;
-    if (filter === 'done') return s.completed;
-    if (filter === 'fav') return s.favorited;
-    if (filter === 'todo') return s.has_sheet && !s.completed;
+    if (filter === 'premium') return s.tier === 'premium';
+    if (filter === 'done') return s.tier !== 'premium' && s.completed;
+    if (filter === 'fav') return s.tier !== 'premium' && s.favorited;
+    if (filter === 'todo') return s.tier !== 'premium' && s.has_sheet && !s.completed;
     return true;
   });
 }
 
 function card(s) {
+  if (s.tier === 'premium') return premiumCard(s);
+
   // Rules without a written sheet still appear, but say so plainly rather
   // than pretending to be finished.
   if (!s.has_sheet) {
@@ -101,6 +105,32 @@ function card(s) {
       s.mastery > 0 ? h('span', {}, `· ${pct(s.mastery)} mastery`) : null));
 }
 
+/**
+ * A premium card. When locked it still links to the sheet — the page shows
+ * the upgrade screen, which is a better destination than a dead card, and
+ * the server sends no content either way.
+ */
+function premiumCard(s) {
+  const locked = s.locked !== false;
+
+  return h('a.cs-card', {
+    href: locked ? UPGRADE_URL : `cheatsheet.html?rule=${s.slug}`,
+    dataset: { accent: 'gold', tier: 'premium', state: locked ? 'locked' : 'todo' },
+    'aria-label': locked
+      ? `${s.name} — premium, locked. Opens the upgrade page.`
+      : s.name
+  },
+    h('span.cs-badge-premium', {}, locked ? '🔒 PREMIUM' : '✨ PREMIUM'),
+    h('div.cs-card__icon', { 'aria-hidden': 'true' }, s.icon || '✨'),
+    h('div.cs-card__name', {}, s.name),
+    s.subtitle ? h('div.cs-card__trick', {}, s.subtitle) : null,
+    h('div.cs-card__summary', {}, s.summary || ''),
+    h('div.cs-card__meta', {},
+      h('span', {}, `⏱ ${s.reading_minutes || 5} min`),
+      s.section_count ? h('span', {}, `· ${s.section_count} extra sections`) : null,
+      locked ? h('span.cs-card__cta', {}, '· Upgrade to read →') : null));
+}
+
 function draw() {
   const rows = visible();
   if (!rows.length) {
@@ -121,7 +151,8 @@ function draw() {
     h('section.mb-8', {},
       h('div.row-between.mb-4', {},
         h('h2.h3', {}, domain),
-        h('span.badge', {}, `${items.filter((i) => i.has_sheet).length} of ${items.length} written`)),
+        h('span.badge', {}, `${items.filter((i) => i.has_sheet && i.tier !== 'premium').length}`
+          + ` of ${items.filter((i) => i.tier !== 'premium').length} written`)),
       h('div.cs-grid', {}, items.map(card)))));
 }
 

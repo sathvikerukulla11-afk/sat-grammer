@@ -171,3 +171,13 @@
 .auth-divider::before, .auth-divider::after {
   content: ""; flex: 1; height: 1px; background: var(--border);
 }
+
+/* The markup has used .field__label since the first admin page; it never
+   had a rule, so labels fell back to plain body text and sat too close to
+   their input. */
+.field__label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  color: var(--text);
+}
+.field__label .muted { font-weight: var(--weight-normal); }

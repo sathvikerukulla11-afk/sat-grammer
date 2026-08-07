@@ -70,6 +70,7 @@ export const CONFIG = Object.freeze({
     RULES: 'rules.html',
     CHEATSHEETS: 'cheatsheets.html',
     CHEATSHEET: 'cheatsheet.html',
+    PRICING: 'pricing.html',
     RULE: 'rule.html',
     REVIEW: 'review.html',
     PROGRESS: 'progress.html',

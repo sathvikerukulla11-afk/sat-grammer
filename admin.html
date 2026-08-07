@@ -45,6 +45,7 @@
         <button class="nav__link" type="button" data-panel="quality">Quality queue</button>
         <button class="nav__link" type="button" data-panel="rules">Rules</button>
           <button class="nav__link" type="button" data-panel="users">Users</button>
+          <button class="nav__link" type="button" data-panel="premium">✨ Premium</button>
           <button class="nav__link" type="button" data-panel="import">Bulk import</button>
         </nav>
 
@@ -280,11 +281,88 @@
         <section id="panel-users" class="admin-panel" aria-labelledby="h-users" hidden>
           <h2 class="h4" id="h-users">Users</h2>
             <label class="visually-hidden" for="user-search">Search users</label>
-            <input class="input" type="search" id="user-search" placeholder="Search by username…" style="max-width:280px">
+            <input class="input" type="search" id="user-search" placeholder="Search by username, name or email…" style="max-width:320px">
             <div class="table-wrap mt-5"><table class="table">
               <caption class="visually-hidden">Registered users</caption>
-              <thead><tr><th scope="col">Username</th><th scope="col">Name</th><th scope="col">Role</th><th scope="col">Joined</th><th scope="col"></th></tr></thead>
+              <thead><tr><th scope="col">User</th><th scope="col">Name</th><th scope="col">Role</th><th scope="col">Premium</th><th scope="col">Joined</th><th scope="col"></th></tr></thead>
               <tbody id="users-table"></tbody>
+            </table></div>
+          </section>
+
+          <section id="panel-premium" class="admin-panel" aria-labelledby="h-premium" hidden data-accent="gold">
+            <h2 class="h4" id="h-premium">Premium access</h2>
+            <p class="lead mt-2">
+              A code never grants premium on its own. Redeeming one files a request here,
+              and only an approval on this page turns <code>is_premium</code> on.
+            </p>
+
+            <!-- ---- requests ---- -->
+            <h3 class="h5 mt-8" id="h-premium-requests">Requests</h3>
+            <div class="row-wrap mt-3" role="group" aria-labelledby="h-premium-requests">
+              <button class="chip" type="button" data-req-filter="pending" aria-pressed="true">Pending</button>
+              <button class="chip" type="button" data-req-filter="approved" aria-pressed="false">Approved</button>
+              <button class="chip" type="button" data-req-filter="rejected" aria-pressed="false">Rejected</button>
+              <button class="chip" type="button" data-req-filter="all" aria-pressed="false">All</button>
+              <span class="text-sm muted" id="req-count" style="margin-left:auto"></span>
+            </div>
+            <div class="table-wrap mt-4"><table class="table">
+              <caption class="visually-hidden">Premium access requests</caption>
+              <thead><tr>
+                <th scope="col">User</th>
+                <th scope="col">Code</th>
+                <th scope="col">Requested</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+              </tr></thead>
+              <tbody id="requests-table"></tbody>
+            </table></div>
+
+            <!-- ---- codes ---- -->
+            <h3 class="h5 mt-10" id="h-premium-codes">Access codes</h3>
+            <form class="card mt-4" id="code-form">
+              <div class="grid grid-auto-sm">
+                <div class="field">
+                  <label class="field__label" for="c-code">Code</label>
+                  <input class="input" type="text" id="c-code" placeholder="Leave blank to generate"
+                         maxlength="32" pattern="[A-Za-z0-9-]{4,32}"
+                         autocomplete="off" spellcheck="false">
+                  <p class="field__help">Letters, digits and hyphens. Stored upper-case.</p>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="c-max-uses">Maximum uses</label>
+                  <input class="input" type="number" id="c-max-uses" value="1" min="1" max="10000">
+                  <p class="field__help">Counted on approval, so a rejection costs nothing.</p>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="c-expires">Expires <span class="muted">(optional)</span></label>
+                  <input class="input" type="date" id="c-expires">
+                </div>
+                <div class="field">
+                  <label class="field__label" for="c-grant-days">Grant length <span class="muted">(optional)</span></label>
+                  <input class="input" type="number" id="c-grant-days" min="1" max="3650" placeholder="Days">
+                  <p class="field__help">Blank means premium never expires. You can override this when approving.</p>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="c-note">Note <span class="muted">(optional)</span></label>
+                  <input class="input" type="text" id="c-note" maxlength="200" placeholder="e.g. Ms. Ortiz's class">
+                </div>
+              </div>
+              <div class="row-wrap mt-4">
+                <button class="btn btn-premium" type="submit" id="create-code-btn">Create code</button>
+              </div>
+            </form>
+
+            <div class="table-wrap mt-5"><table class="table">
+              <caption class="visually-hidden">Premium access codes</caption>
+              <thead><tr>
+                <th scope="col">Code</th>
+                <th scope="col">Uses</th>
+                <th scope="col">Grant</th>
+                <th scope="col">Expires</th>
+                <th scope="col">State</th>
+                <th scope="col">Actions</th>
+              </tr></thead>
+              <tbody id="codes-table"></tbody>
             </table></div>
           </section>
 
