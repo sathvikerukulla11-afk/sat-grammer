@@ -31,7 +31,7 @@ async function draw() {
     render($('#leaderboard-list'), h('div.empty', {},
       h('p.empty__title', {}, 'The board is empty for this period'),
       h('p', {}, 'Answer ten questions to be ranked.'),
-      h('a.btn.btn-primary.mt-4', { href: 'practice.html' }, 'Start practising')));
+      h('a.btn.btn-primary.mt-4', { href: 'practice.html' }, 'Start practicing')));
     return;
   }
 

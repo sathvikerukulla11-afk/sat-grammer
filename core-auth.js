@@ -13,9 +13,9 @@ import { supabase } from './core-supabase.js';
 import { store } from './core-store.js';
 import { emit, EVENTS } from './core-events.js';
 import { AppError, friendlyMessage, unwrap } from './core-errors.js';
-import { CONFIG } from './config.js';
+import { CONFIG, pageUrl } from './config.js';
 
-const url = (page) => new URL(CONFIG.BASE_PATH + '/' + page, location.origin).href;
+const url = pageUrl;
 
 /* ------------------------------------------------------------------ */
 /* Validation — mirrored server-side by CHECK constraints and policies */

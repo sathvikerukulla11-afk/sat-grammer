@@ -63,22 +63,6 @@ export async function getSession(sessionId) {
   );
 }
 
-/** An unfinished session from a closed tab, if there is one. */
-export async function findResumableSession() {
-  const stored = local.get(RESUME_KEY);
-  if (!stored?.id) return null;
-
-  const { data } = await supabase
-    .from('practice_sessions')
-    .select('*')
-    .eq('id', stored.id)
-    .eq('status', 'active')
-    .maybeSingle();
-
-  if (!data) { local.remove(RESUME_KEY); return null; }
-  return data;
-}
-
 /**
  * Flag a question for a second look before submitting.
  *
@@ -94,11 +78,45 @@ export async function toggleFlag(sessionId, questionId) {
   );
 }
 
-export async function getSessionFlags(sessionId) {
-  const rows = unwrap(
-    await supabase.from('session_flags').select('question_id').eq('session_id', sessionId)
-  );
-  return new Set(rows.map((row) => row.question_id));
+/**
+ * Full state of a session: the frozen question order plus the grade for
+ * every question already answered in it.
+ *
+ * This is what makes resume actually resume. Answers were always durable
+ * — `record_attempt` writes a row the instant one is submitted — but
+ * nothing read them back, so a resumed session rendered blank.
+ */
+export async function getSessionState(sessionId) {
+  return unwrap(await supabase.rpc('get_session_state', { p_session_id: sessionId }));
+}
+
+/**
+ * Persist the current position. Called on every answer and every
+ * navigation, so closing the tab mid-session loses at most the question
+ * the student was looking at, never an answer.
+ */
+export async function saveCursor(sessionId, cursor) {
+  const { error } = await supabase.rpc('save_session_cursor', {
+    p_session_id: sessionId, p_cursor: cursor
+  });
+  // Non-fatal: the resume path falls back to the first unanswered
+  // question, so a failed cursor write costs position, not progress.
+  if (error) console.warn('[practice] cursor save failed:', error.message);
+  return !error;
+}
+
+/**
+ * An unfinished session, from the database rather than localStorage.
+ *
+ * localStorage does not survive clearing site data, a different browser,
+ * or a different machine. The session row does, which is what makes
+ * "close the browser and come back tomorrow" work.
+ */
+export async function findResumableSession() {
+  const session = await unwrap(await supabase.rpc('find_active_session'));
+  if (session) local.set(RESUME_KEY, { id: session.id, mode: session.mode });
+  else local.remove(RESUME_KEY);
+  return session;
 }
 
 export async function getDailyChallenge() {

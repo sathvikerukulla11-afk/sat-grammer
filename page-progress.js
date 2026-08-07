@@ -36,8 +36,8 @@ $('#streak-summary').textContent =
 heatmap($('#calendar'), overview.calendar || [], { weeks: 26 });
 
 /* ---- weakest / strongest ------------------------------------------------- */
-const practised = rules.filter((r) => r.attempted >= 5);
-const sorted = [...practised].sort((a, b) => a.mastery - b.mastery);
+const practiced = rules.filter((r) => r.attempted >= 5);
+const sorted = [...practiced].sort((a, b) => a.mastery - b.mastery);
 
 drawExtreme($('#weakest'), sorted.slice(0, 6),
   'Answer at least five questions in a rule and it shows up here.');

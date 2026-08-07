@@ -98,6 +98,6 @@ if (!isSignedIn()) {
     h('div.alert.alert-info.mb-6', {},
       h('div', {},
         h('strong', {}, 'Reading is free. '),
-        'Create an account to practise the questions and track mastery per rule. ',
+        'Create an account to practice the questions and track mastery per rule. ',
         h('a', { href: 'register.html' }, 'Sign up →'))));
 }

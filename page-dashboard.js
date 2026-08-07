@@ -59,7 +59,7 @@ render($('#quick-actions'), [
   { href: 'practice.html?mode=review&start=1', title: 'Review what you missed',
     desc: 'Questions you got wrong and have not fixed.' },
   { href: 'timed.html', title: 'Timed run',
-    desc: 'Practise at real section pacing.' },
+    desc: 'Practice at real section pacing.' },
   { href: 'rules.html', title: 'Study a rule',
     desc: 'Read the explanation, then drill it.' }
 ].map((action) =>

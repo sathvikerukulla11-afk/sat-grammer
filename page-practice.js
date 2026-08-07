@@ -8,10 +8,11 @@ import { mountShell } from './ui-shell.js';
 import { requireAuth } from './core-auth.js';
 import { h, render, $, $$ } from './core-dom.js';
 import { store } from './core-store.js';
-import { num, pct, duration, titleCase } from './core-format.js';
+import { num, pct, duration, titleCase, relativeTime } from './core-format.js';
 import { getRules, reportQuestion } from './svc-questions.js';
 import { getRuleCompletion } from './svc-progress.js';
-import { startSession, getSession, findResumableSession } from './svc-practice.js';
+import { startSession, getSession, findResumableSession,
+         finishSession } from './svc-practice.js';
 import { PracticeRunner } from './engine-session.js';
 import { renderQuestionCard, bindShortcuts } from './ui-question-card.js';
 import { toastError, toastSuccess } from './ui-toast.js';
@@ -63,7 +64,7 @@ const MODE_HELP = {
 const rules = await getRules();
 
 // Completion tells the student how much of each rule's bank is left,
-// which is the number that actually answers "what should I practise?".
+// which is the number that actually answers "what should I practice?".
 const completion = await getRuleCompletion().catch(() => []);
 const completionByRule = new Map(completion.map((row) => [row.rule_id, row]));
 
@@ -175,8 +176,8 @@ function updateSummary() {
   startBtn.textContent = empty
     ? 'No unseen questions left — uncheck "skip seen"'
     : short
-      ? `Start practising (${pool} available)`
-      : 'Start practising';
+      ? `Start practicing (${pool} available)`
+      : 'Start practicing';
   startBtn.disabled = empty;
 }
 
@@ -207,11 +208,30 @@ if (resumable && !params.get('session')) {
     h('div.alert.alert-info', {},
       h('div', {},
         h('strong', {}, 'You have an unfinished session. '),
-        `${resumable.answered} of ${resumable.total_questions} answered.`),
+        `${resumable.answered} of ${resumable.total_questions} answered, `,
+        `${resumable.correct} correct. Started ${relativeTime(resumable.started_at)}.`,
+        h('div.text-sm.mt-1', {},
+          'Your answers are saved — you will pick up on question ',
+          String(Math.min(resumable.answered + 1, resumable.total_questions)), '.')),
       h('div.spacer'),
-      h('button.btn.btn-sm.btn-primary', {
-        type: 'button', onclick: () => launch(resumable)
-      }, 'Resume')));
+      h('div.row', {},
+        h('button.btn.btn-sm.btn-ghost', {
+          type: 'button',
+          async onclick() {
+            if (await confirmDialog({
+              title: 'Discard this session?',
+              message: `${resumable.answered} answers are already recorded and will `
+                     + 'stay in your statistics. Only the unfinished set is closed.',
+              confirmLabel: 'Discard', danger: true
+            })) {
+              await finishSession(resumable.id).catch(() => {});
+              banner.hidden = true;
+            }
+          }
+        }, 'Discard'),
+        h('button.btn.btn-sm.btn-primary', {
+          type: 'button', onclick: () => launch(resumable)
+        }, 'Resume'))));
 }
 
 /* ================================================================== */
@@ -260,6 +280,13 @@ async function launch(session) {
 
   history.replaceState(null, '', `?session=${session.id}`);
   window.addEventListener('beforeunload', warnOnLeave);
+
+  if (runner.restored > 0) {
+    toastSuccess(
+      `${runner.restored} answer${runner.restored === 1 ? '' : 's'} restored. `
+      + `Continuing on question ${runner.index + 1}.`,
+      { title: 'Session resumed' });
+  }
 }
 
 function warnOnLeave(event) {
@@ -382,7 +409,7 @@ function showResults(summary) {
         h('div.skeleton.skeleton-text', { style: { height: '80px' } }))),
 
     h('div.row-wrap.mt-8', { style: { justifyContent: 'center' } },
-      h('a.btn.btn-primary.btn-lg', { href: 'practice.html' }, 'Practise again'),
+      h('a.btn.btn-primary.btn-lg', { href: 'practice.html' }, 'Practice again'),
       summary.missed.length
         ? h('a.btn.btn-lg', { href: 'practice.html?mode=review&start=1' }, 'Drill what I missed')
         : null,

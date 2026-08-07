@@ -7,7 +7,7 @@
 import { h, $, render } from './core-dom.js';
 import { store } from './core-store.js';
 import { initAuth, signOut, isSignedIn, isStaff } from './core-auth.js';
-import { CONFIG } from './config.js';
+import { CONFIG, pageUrl } from './config.js';
 import { initTheme } from './ui-theme.js';
 import { toastAchievement } from './ui-toast.js';
 import { on, EVENTS } from './core-events.js';
@@ -15,7 +15,7 @@ import { initials } from './core-format.js';
 import { mountFeedbackButton, openFeedbackDialog } from './ui-feedback-widget.js';
 
 const R = CONFIG.ROUTES;
-const path = (page) => `${CONFIG.BASE_PATH}/${page}`.replace(/^\/+/, '') || page;
+const path = pageUrl;
 
 const PUBLIC_NAV = [
   { href: R.RULES, label: 'Grammar Rules' },

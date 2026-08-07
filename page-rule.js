@@ -85,7 +85,7 @@ if (!isSignedIn()) {
     ['Questions seen', progress
       ? `${progress.seen} of ${progress.available} (${Math.round(progress.completion * 100)}%)`
       : '\u2014'],
-    ['Last practised', data?.last_practiced ? relativeTime(data.last_practiced) : 'Never']
+    ['Last practiced', data?.last_practiced ? relativeTime(data.last_practiced) : 'Never']
   ].flatMap(([term, value]) =>
     h('div.row-between', {}, h('dt.muted', {}, term), h('dd', {}, value))));
 }

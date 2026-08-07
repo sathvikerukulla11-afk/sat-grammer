@@ -37,7 +37,7 @@ function draw() {
   if (!rows.length) {
     render($('#achievement-grid'), h('div.empty', {},
       h('p.empty__title', {}, 'Nothing here yet'),
-      h('p', {}, 'Keep practising and these fill in.')));
+      h('p', {}, 'Keep practicing and these fill in.')));
     return;
   }
 

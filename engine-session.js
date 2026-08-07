@@ -6,9 +6,9 @@
  * attempt, so there is nothing in memory for a student to inspect.
  */
 import { Stopwatch } from './engine-timer.js';
-import { submitAnswer, finishSession, getSessionQuestions } from './svc-practice.js';
+import { submitAnswer, finishSession, getSessionState, saveCursor } from './svc-practice.js';
 import { toggleBookmark } from './svc-questions.js';
-import { toggleFlag, getSessionFlags } from './svc-practice.js';
+import { toggleFlag } from './svc-practice.js';
 import { emit } from './core-events.js';
 
 export class PracticeRunner {
@@ -25,23 +25,62 @@ export class PracticeRunner {
     this.finished = false;
     this.flags = new Set();          // question ids marked for a second look
     this.reviewing = false;          // showing the pre-submit review screen
+    this.resumedMs = 0;              // attentive time carried over from before
+    this.restored = 0;               // how many answers came back from the server
 
     this._handlers = { change: new Set(), graded: new Set(), done: new Set() };
   }
 
   /* ---- lifecycle ---------------------------------------------------- */
 
+  /**
+   * Load the session, restoring anything already answered.
+   *
+   * One request returns the frozen question order AND every grade already
+   * recorded against this session, so a resumed run is indistinguishable
+   * from one that was never interrupted.
+   */
   async load() {
-    const [questions, flags] = await Promise.all([
-      getSessionQuestions(this.session.id),
-      getSessionFlags(this.session.id).catch(() => new Set())
-    ]);
-    this.questions = questions;
-    this.flags = flags;
-    this.index = Math.min(this.session.cursor || 0, this.questions.length - 1);
+    const state = await getSessionState(this.session.id);
+
+    this.session = { ...this.session, ...state.session };
+    this.questions = state.questions || [];
+
+    this.flags = new Set(
+      this.questions.filter((q) => q.flagged).map((q) => q.id));
+
+    // Rebuild the results map from the server's record of what happened.
+    this.results.clear();
+    for (const [questionId, a] of Object.entries(state.answers || {})) {
+      this.results.set(questionId, {
+        is_correct: a.is_correct,
+        correct_label: a.correct_label,
+        explanation: a.explanation,
+        rationales: a.rationales,
+        selected_choice_id: a.selected_choice_id,
+        choice_label: a.choice_label,
+        time_ms: a.time_ms,
+        skipped: a.skipped,
+        xp_gained: 0,          // already credited when it was first answered
+        restored: true         // so the UI can say so rather than pretend
+      });
+    }
+    this.restored = this.results.size;
+    this.resumedMs = Number(state.session?.duration_ms) || 0;
+
+    // Drop the student at the first unanswered question. If every question
+    // is answered they are effectively at the review screen.
+    const resumeIndex = Number.isInteger(state.resume_index) ? state.resume_index : 0;
+    this.index = Math.max(0, Math.min(resumeIndex, this.questions.length - 1));
+
     this._emitChange();
-    this.stopwatch.start();
+    if (!this.isGraded) this.stopwatch.start();
     return this.questions;
+  }
+
+  /** Total attentive time, including everything from before the resume. */
+  get elapsedMs() {
+    return this.resumedMs + this.stopwatch.read();
   }
 
   get current()   { return this.questions[this.index] || null; }
@@ -83,6 +122,11 @@ export class PracticeRunner {
     this.results.set(question.id, record);
     this._handlers.graded.forEach((fn) => fn(record, question));
     this._emitChange();
+
+    // The answer itself is already durable — record_attempt wrote it
+    // before returning. This only persists *position*, so a reload comes
+    // back to the right question rather than the start.
+    this._persistCursor();
 
     // Without instant feedback the runner advances immediately, exam-style.
     if (!this.instantFeedback) await this.next();
@@ -139,6 +183,13 @@ export class PracticeRunner {
     this.stopwatch.reset();
     if (!this.isGraded) this.stopwatch.start();
     this._emitChange();
+    this._persistCursor();
+  }
+
+  /** Fire-and-forget: losing a cursor write costs position, not progress. */
+  _persistCursor() {
+    if (this.finished) return;
+    saveCursor(this.session.id, this.index).catch(() => {});
   }
 
   /* ---- bookmarks ------------------------------------------------------ */

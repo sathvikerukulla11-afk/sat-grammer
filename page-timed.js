@@ -6,11 +6,11 @@ import { mountShell } from './ui-shell.js';
 import { requireAuth } from './core-auth.js';
 import { h, render, $, $$ } from './core-dom.js';
 import { pct, duration, num } from './core-format.js';
-import { startSession } from './svc-practice.js';
+import { startSession, findResumableSession } from './svc-practice.js';
 import { PracticeRunner } from './engine-session.js';
 import { Countdown, formatClock } from './engine-timer.js';
 import { renderQuestionCard, bindShortcuts } from './ui-question-card.js';
-import { toastError } from './ui-toast.js';
+import { toastError, toastSuccess } from './ui-toast.js';
 import { confirmDialog } from './ui-modal.js';
 import { barChart } from './ui-charts.js';
 import { getRecommendations } from './svc-progress.js';
@@ -57,17 +57,7 @@ let unbindShortcuts = null;
 let runStartedAt = 0;
 let totalTimer = null;
 
-$('#start-btn').addEventListener('click', async () => {
-  const button = $('#start-btn');
-  button.dataset.loading = 'true';
-  try {
-    const session = await startSession('timed', {
-      difficulties: [...config.difficulties],
-      length: config.length,
-      seconds_per_question: config.seconds,
-      exclude_seen: true
-    });
-
+async function begin(session) {
     runner = new PracticeRunner({ session, mode: 'timed', instantFeedback: false });
     runner.onChange(paint);
     runner.onDone(showResults);
@@ -76,18 +66,69 @@ $('#start-btn').addEventListener('click', async () => {
     await runner.load();
 
     unbindShortcuts = bindShortcuts(runner);
-    runStartedAt = Date.now();
+    // Carry forward the time already banked, so a resumed run reports the
+    // true total rather than restarting the clock at zero.
+    runStartedAt = Date.now() - (runner.resumedMs || 0);
     totalTimer = setInterval(() => {
       $('#total-elapsed').textContent = formatClock((Date.now() - runStartedAt) / 1000);
     }, 1000);
 
     startCountdown();
+
+    if (runner.restored > 0) {
+      toastSuccess(
+        `${runner.restored} answer${runner.restored === 1 ? '' : 's'} restored. `
+        + `Continuing on question ${runner.index + 1}.`,
+        { title: 'Run resumed' });
+    }
+}
+
+$('#start-btn').addEventListener('click', async () => {
+  const button = $('#start-btn');
+  button.dataset.loading = 'true';
+  try {
+    await begin(await startSession('timed', {
+      difficulties: [...config.difficulties],
+      length: config.length,
+      seconds_per_question: config.seconds,
+      exclude_seen: true
+    }));
   } catch (err) {
     toastError(err.message, { title: 'Could not start' });
   } finally {
     delete button.dataset.loading;
   }
 });
+
+/*
+ * Resuming a timed run.
+ *
+ * The per-question countdown restarts at full time rather than resuming
+ * mid-question. Freezing a countdown across hours and handing back four
+ * seconds would be worse than useless, and the honest alternative — a
+ * fresh clock on the question they never answered — is what a proctor
+ * would do.
+ */
+const resumableTimed = await findResumableSession().catch(() => null);
+if (resumableTimed && resumableTimed.mode === 'timed') {
+  config.seconds = Number(resumableTimed.config?.seconds_per_question) || config.seconds;
+  const banner = h('div.alert.alert-info.mb-6', {},
+    h('div', {},
+      h('strong', {}, 'You have an unfinished timed run. '),
+      `${resumableTimed.answered} of ${resumableTimed.total_questions} answered. `,
+      h('div.text-sm.mt-1', {},
+        'Your answers are saved. The clock restarts on the question you '
+        + 'never reached.')),
+    h('div.spacer'),
+    h('button.btn.btn-sm.btn-primary', {
+      type: 'button',
+      async onclick() {
+        showView('session');
+        await begin(resumableTimed);
+      }
+    }, 'Resume run'));
+  $('#setup-view').prepend(banner);
+}
 
 function startCountdown() {
   countdown?.stop();
@@ -151,7 +192,7 @@ function showResults(summary) {
     ? 'Comfortably inside the clock.'
     : perQuestion <= config.seconds
       ? 'Right at pace.'
-      : 'Running over — worth practising the same rules untimed first.';
+      : 'Running over — worth practicing the same rules untimed first.';
 
   render($('#results-container'),
     h('div.results-hero', {},

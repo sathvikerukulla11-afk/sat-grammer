@@ -12,7 +12,7 @@ try {
   const tiles = [
     [stats.question_count, 'Original questions'],
     [stats.rule_count, 'Grammar rules'],
-    [stats.student_count, 'Students practising'],
+    [stats.student_count, 'Students practicing'],
     [stats.attempt_count, 'Questions answered']
   ];
   render($('#site-stats'), tiles.map(([value, label]) =>
