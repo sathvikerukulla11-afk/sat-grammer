@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font-size="md">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How it works — SAT Grammar Lab</title>
+<meta name="description" content="What SAT Grammar Lab is, how practice works, the grammar topics covered, and how progress is tracked.">
+<link rel="canonical" href="https://example.com/learn-more.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="How it works — SAT Grammar Lab">
+<meta property="og:description" content="What SAT Grammar Lab is, how practice works, the grammar topics covered, and how progress is tracked.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="main.css">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem('satgl.theme')||'"system"');var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.dataset.fontSize=JSON.parse(localStorage.getItem('satgl.fontSize')||'"md"');}catch(e){}})();</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div id="site-header"></div>
+
+<main id="main" tabindex="-1">
+
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">How it works</p>
+      <h1 class="hero__title">Everything the homepage left out.</h1>
+      <p class="hero__sub">
+        What this is, why it exists, how practice works, and how it tells whether you are
+        actually getting better.
+      </p>
+      <div class="hero__cta">
+        <a class="btn btn-primary btn-lg" href="register.html?next=practice.html"
+           id="cta-practice">Start Practicing</a>
+        <a class="btn btn-lg" href="cheatsheets.html">Read the cheat sheets</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---- contents ---- -->
+  <section class="section-sm">
+    <div class="container container-prose">
+      <nav class="card" aria-label="On this page">
+        <h2 class="card__title">On this page</h2>
+        <ul class="stack-sm mt-3" role="list" style="columns:2;column-gap:var(--space-8)">
+          <li><a href="#why">Why I built this</a></li>
+          <li><a href="#what">What this is</a></li>
+          <li><a href="#practice">How practice works</a></li>
+          <li><a href="#topics">Grammar topics covered</a></li>
+          <li><a href="#timed">Timed practice</a></li>
+          <li><a href="#personalized">Personalized learning</a></li>
+          <li><a href="#mistakes">Mistake tracking</a></li>
+          <li><a href="#analytics">Progress analytics</a></li>
+          <li><a href="#daily">Daily challenges</a></li>
+          <li><a href="#streaks">Achievements and streaks</a></li>
+          <li><a href="#originality">Question quality</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#about">About the project</a></li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+
+  <!-- ---- why ----
+       DRAFT. Every sentence below is true of the project as built, but the
+       reason a person builds something is theirs to tell. Swathi should
+       replace this with her own account before launch — a real, specific
+       story here is worth more than anything else on the page. -->
+  <section class="section" id="why">
+    <div class="container container-prose">
+      <h2 class="h2">Why I built this</h2>
+
+      <div class="cs-trick mt-6" data-accent="blue">
+        <p class="cs-trick__line" style="font-family:var(--font-serif);font-size:var(--text-lg);line-height:var(--leading-loose);font-weight:var(--weight-normal)">
+          I kept getting the same four or five things wrong, and none of the practice I
+          could find would tell me <em>why</em> the other choices were wrong. So I started
+          writing my own questions, and this is where they ended up.
+        </p>
+      </div>
+
+      <p class="muted mt-6">
+        Most free SAT grammar practice does one of two things. It reuses questions from real
+        exams, which is a copyright problem and means the explanations are usually someone
+        else's. Or it gives you a one-line answer key — "C is correct" — which tells you
+        nothing you can carry into the next question.
+      </p>
+      <p class="muted mt-4">
+        So every question here was written by hand, and every one explains all four choices.
+        The wrong answers are where the learning is: if you picked B, you want to know what
+        B was testing and why it failed, not just that C won.
+      </p>
+      <p class="muted mt-4">
+        It covers grammar and nothing else because grammar is the part of the SAT where the
+        rules are finite. There are about thirty of them. You can genuinely finish learning
+        them, which is not true of reading comprehension, and that makes it the section
+        where focused practice pays back fastest.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---- what ---- -->
+  <section class="section" id="what">
+    <div class="container container-prose">
+      <h2 class="h2">What this is</h2>
+      <p class="lead mt-4">
+        A practice site for the grammar and writing section of the SAT, and nothing else.
+        No reading, no math, no plans to add them.
+      </p>
+      <p class="muted mt-4">
+        The Writing section rewards a small, finite set of grammar rules. Learn the rules,
+        drill them until they are automatic, and the section stops being a reading-speed
+        test. Everything here is built around that one idea.
+      </p>
+      <p class="muted mt-4">
+        You can practise one rule at a time, pick a difficulty, or let it choose for you and
+        go after whatever you have been getting wrong. If you keep missing the same thing,
+        the per-rule tracking will tell you which one is actually costing you points rather
+        than which one feels hardest — those are often not the same rule.
+      </p>
+      <p class="muted mt-4">
+        Tutors and teachers are welcome to use it too. Because every question explains all
+        four choices, a student working alone still gets the reasoning someone would
+        otherwise have to sit next to them and supply.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---- practice ---- -->
+  <section class="section bg-sunken" id="practice">
+    <div class="container">
+      <div class="container-prose">
+        <h2 class="h2">How practice works</h2>
+        <p class="lead mt-4">Four steps, repeated.</p>
+      </div>
+      <div class="grid grid-4 mt-8">
+        <div class="card">
+          <span class="setup-step__num" aria-hidden="true">1</span>
+          <h3 class="card__title mt-3">Answer a mixed set</h3>
+          <p class="muted mt-2">Ten questions is enough for the engine to find your weak points.</p>
+        </div>
+        <div class="card">
+          <span class="setup-step__num" aria-hidden="true">2</span>
+          <h3 class="card__title mt-3">Read the explanations</h3>
+          <p class="muted mt-2">Including the three you did not pick. That is the part that moves a score.</p>
+        </div>
+        <div class="card">
+          <span class="setup-step__num" aria-hidden="true">3</span>
+          <h3 class="card__title mt-3">Drill what you missed</h3>
+          <p class="muted mt-2">Adaptive practice targets your weakest rules at the right difficulty.</p>
+        </div>
+        <div class="card">
+          <span class="setup-step__num" aria-hidden="true">4</span>
+          <h3 class="card__title mt-3">Watch mastery climb</h3>
+          <p class="muted mt-2">Per rule, weighted toward recent attempts, discounted until it means something.</p>
+        </div>
+      </div>
+      <div class="container-prose mt-8">
+        <p class="muted">
+          You choose the length and the difficulty before every set. Nothing starts until
+          you have picked both, so a session is never a surprise.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---- topics ---- -->
+  <section class="section" id="topics">
+    <div class="container">
+      <div class="container-prose">
+        <h2 class="h2">Grammar topics covered</h2>
+        <p class="lead mt-4">
+          <span id="topic-count">Every rule</span> across four domains, each with its own
+          cheat sheet and its own practice set.
+        </p>
+      </div>
+      <div class="grid grid-auto mt-8" id="domain-grid">
+        <div class="card"><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text skeleton-line-70"></div></div>
+      </div>
+      <div class="container-prose mt-6">
+        <a class="btn" href="rules.html">Browse every rule →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---- timed ---- -->
+  <section class="section bg-sunken" id="timed">
+    <div class="container container-prose">
+      <h2 class="h2">Timed practice</h2>
+      <p class="lead mt-4">
+        A clock that matches real pacing, and an analysis afterwards of whether you were
+        rushing or labouring.
+      </p>
+      <p class="muted mt-4">
+        You can flag questions to revisit and see everything left blank before you submit,
+        the way a real test interface works. Sessions survive a closed tab — leave in the
+        middle of a set and it resumes where you stopped, with your answers intact.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---- personalized ---- -->
+  <section class="section" id="personalized">
+    <div class="container container-prose">
+      <h2 class="h2">Personalized learning</h2>
+      <p class="lead mt-4">
+        Adaptive practice tracks mastery per rule and keeps serving the ones you keep
+        missing, at the difficulty you are ready for.
+      </p>
+      <p class="muted mt-4">
+        Mastery is not a raw percentage. It weights your recent attempts more heavily than
+        old ones and stays discounted until you have answered enough questions on a rule for
+        the number to mean anything — so a lucky run of three does not read as mastery.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---- mistakes ---- -->
+  <section class="section bg-sunken" id="mistakes">
+    <div class="container container-prose">
+      <h2 class="h2">Mistake tracking</h2>
+      <p class="lead mt-4">Missed questions come back automatically until you get them right, then stay gone.</p>
+      <p class="muted mt-4">
+        Beyond the review queue, the site looks for patterns across your mistakes: which
+        rules cost you most, whether you fade late in a set, and whether you answer wrong
+        questions faster than right ones — which usually means guessing rather than a
+        knowledge gap.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---- analytics ---- -->
+  <section class="section" id="analytics">
+    <div class="container container-prose">
+      <h2 class="h2">Progress analytics</h2>
+      <p class="lead mt-4">Analysis, not just numbers.</p>
+      <p class="muted mt-4">
+        The progress page shows accuracy over time, mastery by rule and by domain, and a
+        breakdown of where your time goes. Every figure is computed from your own attempts;
+        nothing is estimated or extrapolated from other users.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---- daily ---- -->
+  <section class="section bg-sunken" id="daily">
+    <div class="container container-prose">
+      <h2 class="h2">Daily challenges</h2>
+      <p class="lead mt-4">The same set for everyone, every day.</p>
+      <p class="muted mt-4">
+        A short daily set drawn from the free question bank, identical for every student so
+        the results are comparable. A five-minute habit that compounds.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---- streaks ---- -->
+  <section class="section" id="streaks">
+    <div class="container container-prose">
+      <h2 class="h2">Achievements and streaks</h2>
+      <p class="lead mt-4">Badges, a streak calendar, and a leaderboard you can opt out of entirely.</p>
+      <p class="muted mt-4">
+        Streaks count days you practised, not questions you got right, so a bad day does not
+        break one. The leaderboard is opt-in and shows usernames only.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---- originality ---- -->
+  <section class="section bg-sunken" id="originality">
+    <div class="container container-prose">
+      <h2 class="h2">Question quality and originality</h2>
+      <p class="lead mt-4">
+        This site contains no College Board material. Every sentence, every answer choice,
+        and every explanation was written from scratch for this project, guided only by the
+        published list of grammar skills the exam assesses.
+      </p>
+      <p class="muted mt-4">
+        Duplicate prompts are blocked at the database level, and every question is reviewed
+        against a checklist before publication: one defensible answer, four distinct choices,
+        and a written reason for each wrong option.
+      </p>
+      <p class="muted mt-4">
+        SAT is a trademark registered by the College Board, which is not affiliated with
+        this site and does not endorse it.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---- faq ---- -->
+  <section class="section" id="faq">
+    <div class="container container-prose">
+      <h2 class="h2">FAQ</h2>
+      <div class="stack mt-6">
+        <details class="card">
+          <summary class="card__title">Do I need an account?</summary>
+          <p class="muted mt-3">
+            To practice, yes — attempts have to be recorded against someone. The cheat sheets
+            are readable without one.
+          </p>
+        </details>
+        <details class="card">
+          <summary class="card__title">Is it free?</summary>
+          <p class="muted mt-3">
+            The practice bank, the cheat sheets, timed mode, the review queue and progress
+            tracking are free. There is a premium tier with additional material; nothing that
+            is free today will move behind it.
+          </p>
+        </details>
+        <details class="card">
+          <summary class="card__title">Do you cover reading and math?</summary>
+          <p class="muted mt-3">
+            No. This is the grammar and writing section only, and there are no plans to
+            expand.
+          </p>
+        </details>
+        <details class="card">
+          <summary class="card__title">Are these real SAT questions?</summary>
+          <p class="muted mt-3">
+            No, and deliberately so. Reproducing exam material would be a copyright breach.
+            These are original questions written to test the same skills.
+          </p>
+        </details>
+        <details class="card">
+          <summary class="card__title">What happens if I close the tab mid-session?</summary>
+          <p class="muted mt-3">
+            Nothing is lost. Answers are saved as you go and the session resumes where you
+            left it.
+          </p>
+        </details>
+        <details class="card">
+          <summary class="card__title">Can I practice one specific rule?</summary>
+          <p class="muted mt-3">
+            Yes. Every rule has its own practice set, reachable from the rules page or from
+            the bottom of its cheat sheet.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---- about ---- -->
+  <section class="section bg-sunken" id="about">
+    <div class="container container-prose">
+      <h2 class="h2">About the project</h2>
+      <p class="lead mt-4">
+        One section of one exam, done properly rather than every section done adequately.
+      </p>
+      <p class="muted mt-4">
+        The questions, the cheat sheets and the explanations are all original writing. If you
+        find a question that is wrong, ambiguous, or has two defensible answers, there is a
+        report button on every one of them — that feedback genuinely gets read, and items do
+        get rewritten because of it.
+      </p>
+      <p class="muted mt-4">
+        Technically it is a plain static site over a Postgres database. Answer keys live on
+        the server rather than in the page, so you cannot read them out of the HTML — which
+        would rather defeat the point.
+      </p>
+      <div class="hero__cta mt-8" style="justify-content:flex-start">
+        <a class="btn btn-primary btn-lg" href="register.html?next=practice.html"
+           id="cta-practice-2">Start Practicing</a>
+        <a class="btn btn-lg" href="index.html">Back to home</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module" src="page-learn-more.js"></script>
+</body>
+</html>

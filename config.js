@@ -62,6 +62,7 @@ export const CONFIG = Object.freeze({
 
   ROUTES: Object.freeze({
     HOME: 'index.html',
+    LEARN_MORE: 'learn-more.html',
     LOGIN: 'login.html',
     REGISTER: 'register.html',
     DASHBOARD: 'dashboard.html',

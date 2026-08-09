@@ -165,6 +165,7 @@ function buildFooter() {
           h('ul', {},
             h('li', {}, h('a', { href: path(R.PRACTICE) }, 'Practice sets')),
             h('li', {}, h('a', { href: path(R.TIMED) }, 'Timed mode')),
+            h('li', {}, h('a', { href: path(R.LEARN_MORE) }, 'How it works')),
             h('li', {}, h('a', { href: path(R.CHEATSHEETS) }, 'Cheat sheets')),
             h('li', {}, h('a', { href: path(R.PRICING) }, 'Pricing')),
             h('li', {}, h('a', { href: path(R.RULES) }, 'Grammar rules')),

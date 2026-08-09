@@ -3,19 +3,11 @@
    past a few lines it belongs in components/.
    ========================================================================== */
 
-/* --- Home ---------------------------------------------------------------- */
-.home-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: var(--space-6);
-  padding: var(--space-8);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  background: var(--bg-elevated);
-  box-shadow: var(--shadow-sm);
-  text-align: center;
-}
-.home-demo { max-width: 720px; margin-inline: auto; }
+/* --- Home -----------------------------------------------------------------
+   The landing page now builds entirely from shared components (.hero,
+   .card, .feature, .grid-auto-sm), so it needs no page-specific CSS. The
+   old .home-stats and .home-demo rules went with the stat strip and the
+   demo question they styled. */
 
 /* --- Dashboard ----------------------------------------------------------- */
 .welcome-banner {
