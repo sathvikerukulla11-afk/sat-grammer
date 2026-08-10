@@ -25,7 +25,7 @@ if (!isPremium()) {
 
 render($('#coach-controls'),
   h('a.btn', { href: 'progress.html' }, 'Basic progress'),
-  h('a.btn.btn-premium', { href: 'practice.html?mode=adaptive&start=1' }, 'Practise now'));
+  h('a.btn.btn-premium', { href: 'practice.html?mode=adaptive&start=1' }, 'Practice now'));
 
 render(body, h('p.muted.mt-6', {}, 'Loading your plan…'));
 
@@ -57,7 +57,7 @@ function planSection(p) {
 
     p.rules_untouched
       ? h('p.text-sm.muted.mt-2', {},
-          `${p.rules_untouched} rule${p.rules_untouched === 1 ? '' : 's'} you have not tried yet — `
+          `${p.rules_untouched} rule${p.rules_untouched === 1 ? '' : 's'} you have’nt tried yet — `
           + 'those are ranked first, because an untried rule is unknown rather than mastered.')
       : null,
 
@@ -65,7 +65,7 @@ function planSection(p) {
       ? h('div.empty.mt-6', {},
           h('p.empty__title', {}, 'Nothing to plan yet'),
           h('p', {}, 'Answer a few questions and the plan will build itself from your results.'),
-          h('a.btn.btn-primary.mt-4', { href: 'practice.html' }, 'Start practising'))
+          h('a.btn.btn-primary.mt-4', { href: 'practice.html' }, 'Start practicing'))
       : h('div.stack-lg.mt-6', {}, weeks.map(weekCard))
   );
 }
@@ -101,7 +101,7 @@ function weekCard(w) {
             : null,
           h('a.btn.btn-sm.btn-primary', {
             href: `practice.html?rule=${f.rule_slug}&difficulty=any&start=1`
-          }, `Practise (${f.available_questions})`),
+          }, `Practice (${f.available_questions})`),
           h('span.text-xs.muted', { style: { alignSelf: 'center' } },
             f.attempted ? `${num(f.attempted)} answered · ${pct(f.mastery)} mastery` : 'not started')))))
   );
@@ -114,7 +114,7 @@ function analyticsSection(s) {
       h('h2.h3', {}, 'Your numbers'),
       h('div.empty.mt-6', {},
         h('p.empty__title', {}, 'Not enough history yet'),
-        h('p', {}, 'Analytics need a few sessions before they say anything useful.')));
+        h('p', {}, 'These need a few sessions before they can tell you anything useful.')));
   }
 
   return h('section.mt-10', {},

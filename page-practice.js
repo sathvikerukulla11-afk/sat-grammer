@@ -57,7 +57,7 @@ const MODE_HELP = {
   mixed: 'A random draw across every rule and difficulty.',
   rule: 'Choose one or more grammar rules to drill.',
   difficulty: 'Draw only from the difficulty bands you pick.',
-  review: 'Questions you answered incorrectly and have not since got right.',
+  review: 'Questions you got wrong and have’nt fixed yet.',
   bookmarks: 'Only the questions you saved.',
   daily: 'Today’s challenge — the same ten questions everyone gets.'
 };
@@ -92,7 +92,7 @@ render($('#rule-picker'), rules.map((rule) => {
     h('span', {}, rule.name),
     h('span.text-xs', {
       style: { opacity: '0.75' },
-      'aria-label': `${remaining} questions you have not seen`
+      'aria-label': `${remaining} questions you have’nt seen`
     }, `${remaining} new`),
     doneRatio > 0
       ? h('span.text-xs', {
@@ -249,11 +249,11 @@ if (resumable && !params.get('session')) {
   render(banner,
     h('div.alert.alert-info', {},
       h('div', {},
-        h('strong', {}, 'You have an unfinished session. '),
+        h('strong', {}, 'You’ve got an unfinished session. '),
         `${resumable.answered} of ${resumable.total_questions} answered, `,
         `${resumable.correct} correct. Started ${relativeTime(resumable.started_at)}.`,
         h('div.text-sm.mt-1', {},
-          'Your answers are saved — you will pick up on question ',
+          'Your answers are saved — you’ll pick up on question ',
           String(Math.min(resumable.answered + 1, resumable.total_questions)), '.')),
       h('div.spacer'),
       h('div.row', {},
@@ -452,7 +452,7 @@ function showResults(summary) {
 
     h('section.card.mt-6', {},
       h('h2.h4', {}, 'What to do next'),
-      h('p.text-sm.muted', {}, 'Based on everything you have answered, not just this set.'),
+      h('p.text-sm.muted', {}, 'Based on everything you’ve answered, not just this set.'),
       h('div.mt-5#next-steps', {},
         h('div.skeleton.skeleton-text', { style: { height: '80px' } }))),
 

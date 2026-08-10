@@ -39,7 +39,7 @@ async function drawMissed() {
   if (!filtered.length) {
     render($('#missed-list'), h('div.empty', {},
       h('p.empty__title', {}, 'Nothing to review'),
-      h('p', {}, 'Every question you have missed, you have since answered correctly.'),
+      h('p', {}, 'Every question you’ve missed, you’ve since answered correctly.'),
       h('a.btn.btn-primary.mt-4', { href: 'practice.html' }, 'Practice something new')));
     $('#practice-missed-btn').disabled = true;
     return;

@@ -264,7 +264,7 @@ const CHECKS = [
     }
   },
   {
-    name: 'Materialised rule counts are populated',
+    name: 'Materialized rule counts are populated',
     async run() {
       const { data, error } = await supabase
         .from('rule_question_counts').select('rule_id, question_count').limit(200);
@@ -274,7 +274,7 @@ const CHECKS = [
       }
       const total = data.reduce((sum, row) => sum + (row.question_count || 0), 0);
       if (!data.length) {
-        return { ok: false, detail: 'The materialised view is empty.',
+        return { ok: false, detail: 'The materialized view is empty.',
                  fix: 'Run: select public.refresh_rule_counts();' };
       }
       return { ok: true, detail: `${data.length} rules, ${total} published questions counted.` };

@@ -38,8 +38,8 @@ $('#practice-rule-btn').addEventListener('click', () => {
 render($('#rule-lesson'),
   rule.lesson_md
     ? renderMarkdown(rule.lesson_md)
-    : h('p.muted', {}, 'A full written lesson for this rule is being written. ' +
-                       'In the meantime, the practice questions each carry a complete explanation.'));
+    : h('p.muted', {}, 'The full lesson for this rule is’t written yet. ' +
+                       'In the meantime, every practice question here comes with a full explanation.'));
 
 /* ---- traps --------------------------------------------------------------- */
 render($('#rule-traps'),

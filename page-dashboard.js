@@ -50,18 +50,18 @@ render($('#stat-tiles'), [
 getRecommendations(4)
   .then((recs) => renderRecommendations($('#recommendations'), recs))
   .catch(() => render($('#recommendations'),
-    h('p.muted.text-sm', {}, 'Recommendations are unavailable right now.')));
+    h('p.muted.text-sm', {}, 'We could’nt load your suggestions right now.')));
 
 /* ---- quick actions ----------------------------------------------------- */
 render($('#quick-actions'), [
   { href: 'practice.html?mode=adaptive', title: 'Adaptive practice',
-    desc: 'The engine picks your weakest rules — you pick the level.' },
+    desc: 'It picks your weakest rules — you pick the level.' },
   { href: 'practice.html?mode=review', title: 'Review what you missed',
-    desc: 'Questions you got wrong and have not fixed.' },
+    desc: 'Questions you got wrong and have’nt fixed yet.' },
   { href: 'timed.html', title: 'Timed run',
     desc: 'Practice at real section pacing.' },
   { href: 'cheatsheets.html', title: 'Read a cheat sheet',
-    desc: 'Two minutes on one rule, then practise it.' }
+    desc: 'Two minutes on one rule, then practice it.' }
 ].map((action) =>
   h('a.quick-action', { href: action.href },
     h('span.quick-action__title', {}, action.title),
@@ -84,7 +84,7 @@ try {
                            'until midnight in your timezone.'),
           h('a.btn.btn-primary', { href: 'practice.html?mode=daily&start=1' }, 'Take the challenge')));
 } catch {
-  render($('#daily-challenge'), h('p.muted', {}, 'The daily challenge is unavailable right now.'));
+  render($('#daily-challenge'), h('p.muted', {}, 'The daily challenge is’nt loading right now.'));
 }
 
 /* ---- weakest rules ------------------------------------------------------ */
@@ -166,13 +166,13 @@ async function drawGoals() {
   try {
     goals = await getGoals();
   } catch {
-    render($('#goals-list'), h('p.muted.text-sm', {}, 'Goals are unavailable right now.'));
+    render($('#goals-list'), h('p.muted.text-sm', {}, 'We could’nt load your goals right now.'));
     return;
   }
 
   if (!goals.length) {
     render($('#goals-list'), h('p.muted.text-sm', {},
-      'No goals set. A goal you can actually see is a goal you are more likely to hit.'));
+      'No goals set. A goal you can actually see is one you’re more likely to hit.'));
     return;
   }
 

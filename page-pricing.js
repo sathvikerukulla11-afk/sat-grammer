@@ -36,10 +36,10 @@ if (isPremium()) {
   btn.addEventListener('click', () => location.assign('register.html?next=pricing.html'));
   note.textContent = 'Premium attaches to your account, so you need one first.';
 } else {
-  note.textContent = 'Premium is not on sale yet.';
+  note.textContent = 'Premium isn’t on sale yet.';
   btn.addEventListener('click', () => {
     toastSuccess(
-      'Premium is not on sale yet — no payment provider is connected, so there is ' +
+      'Premium isn’t on sale yet — no payment provider is connected, so there’s ' +
       'nothing to charge. Access is granted from the admin panel in the meantime.',
       { title: 'Coming soon', duration: 8000 });
   });

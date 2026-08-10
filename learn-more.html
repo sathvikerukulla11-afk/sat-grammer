@@ -30,7 +30,7 @@
       <p class="eyebrow">How it works</p>
       <h1 class="hero__title">Everything the homepage left out.</h1>
       <p class="hero__sub">
-        What this is, why it exists, how practice works, and how it tells whether you are
+        What this is, why it exists, how practice works, and how it tells whether you’re
         actually getting better.
       </p>
       <div class="hero__cta">
@@ -49,6 +49,7 @@
         <ul class="stack-sm mt-3" role="list" style="columns:2;column-gap:var(--space-8)">
           <li><a href="#why">Why I built this</a></li>
           <li><a href="#what">What this is</a></li>
+          <li><a href="#whats-in-here">What’s in here</a></li>
           <li><a href="#practice">How practice works</a></li>
           <li><a href="#topics">Grammar topics covered</a></li>
           <li><a href="#timed">Timed practice</a></li>
@@ -66,39 +67,35 @@
   </section>
 
 
-  <!-- ---- why ----
-       DRAFT. Every sentence below is true of the project as built, but the
-       reason a person builds something is theirs to tell. Swathi should
-       replace this with her own account before launch — a real, specific
-       story here is worth more than anything else on the page. -->
+  <!-- ---- why ---- -->
   <section class="section" id="why">
     <div class="container container-prose">
       <h2 class="h2">Why I built this</h2>
 
       <div class="cs-trick mt-6" data-accent="blue">
         <p class="cs-trick__line" style="font-family:var(--font-serif);font-size:var(--text-lg);line-height:var(--leading-loose);font-weight:var(--weight-normal)">
-          I kept getting the same four or five things wrong, and none of the practice I
-          could find would tell me <em>why</em> the other choices were wrong. So I started
-          writing my own questions, and this is where they ended up.
+          I did not set out to build a website. I was studying for the SAT and I wanted more
+          grammar practice than I could find, so I started making my own.
         </p>
       </div>
 
       <p class="muted mt-6">
-        Most free SAT grammar practice does one of two things. It reuses questions from real
-        exams, which is a copyright problem and means the explanations are usually someone
-        else's. Or it gives you a one-line answer key — "C is correct" — which tells you
-        nothing you can carry into the next question.
+        I worked on it with my tutor. We wrote the questions ourselves — our own sentences,
+        our own answer choices, our own explanations. To decide what was worth drilling, we
+        went off the grammar skills the College Board publicly describes the test as covering,
+        and we looked at SAT practice material available online to get a feel for how the
+        questions are usually shaped. Nothing was copied from anywhere. Every question here
+        is original.
       </p>
       <p class="muted mt-4">
-        So every question here was written by hand, and every one explains all four choices.
-        The wrong answers are where the learning is: if you picked B, you want to know what
-        B was testing and why it failed, not just that C won.
+        For a while it was just a growing pile of questions that one person was using. Once
+        there were a few hundred, it seemed a bit silly that they were sitting in a folder
+        on my computer. So I turned it into a website and opened it up to other students.
       </p>
       <p class="muted mt-4">
-        It covers grammar and nothing else because grammar is the part of the SAT where the
-        rules are finite. There are about thirty of them. You can genuinely finish learning
-        them, which is not true of reading comprehension, and that makes it the section
-        where focused practice pays back fastest.
+        It is still the thing I wanted when I was studying: a lot of grammar questions, and
+        an explanation for every choice rather than just the right one. If you are preparing
+        for the same test, it is yours now too.
       </p>
     </div>
   </section>
@@ -117,8 +114,8 @@
         test. Everything here is built around that one idea.
       </p>
       <p class="muted mt-4">
-        You can practise one rule at a time, pick a difficulty, or let it choose for you and
-        go after whatever you have been getting wrong. If you keep missing the same thing,
+        You can practice one rule at a time, pick a difficulty, or let it choose for you and
+        go after whatever you’ve been getting wrong. If you keep missing the same thing,
         the per-rule tracking will tell you which one is actually costing you points rather
         than which one feels hardest — those are often not the same rule.
       </p>
@@ -126,6 +123,29 @@
         Tutors and teachers are welcome to use it too. Because every question explains all
         four choices, a student working alone still gets the reasoning someone would
         otherwise have to sit next to them and supply.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---- what's in here ----
+       Moved off the homepage. Every number is read live from site_stats, so
+       nothing here can go stale, and the whole block hides itself if the
+       fetch fails rather than showing a placeholder. -->
+  <section class="section bg-sunken" id="whats-in-here">
+    <div class="container container-prose">
+      <h2 class="h2">What’s in here</h2>
+      <p class="lead mt-4">
+        Counted from the database when you loaded this page, not rounded up for effect.
+      </p>
+
+      <div class="grid grid-4 mt-8" id="stat-grid" hidden></div>
+
+      <ul class="stack-sm mt-8" role="list" id="bank-facts" hidden></ul>
+
+      <p class="muted mt-6" id="stat-fallback" hidden>
+        The live counts are not loading right now. The
+        <a href="rules.html">rules page</a> and the
+        <a href="cheatsheets.html">cheat sheets</a> both list everything directly.
       </p>
     </div>
   </section>
@@ -141,12 +161,12 @@
         <div class="card">
           <span class="setup-step__num" aria-hidden="true">1</span>
           <h3 class="card__title mt-3">Answer a mixed set</h3>
-          <p class="muted mt-2">Ten questions is enough for the engine to find your weak points.</p>
+          <p class="muted mt-2">Ten questions is enough to find your weak points.</p>
         </div>
         <div class="card">
           <span class="setup-step__num" aria-hidden="true">2</span>
           <h3 class="card__title mt-3">Read the explanations</h3>
-          <p class="muted mt-2">Including the three you did not pick. That is the part that moves a score.</p>
+          <p class="muted mt-2">Including the three you didn’t pick. That’s the part that moves a score.</p>
         </div>
         <div class="card">
           <span class="setup-step__num" aria-hidden="true">3</span>
@@ -156,13 +176,13 @@
         <div class="card">
           <span class="setup-step__num" aria-hidden="true">4</span>
           <h3 class="card__title mt-3">Watch mastery climb</h3>
-          <p class="muted mt-2">Per rule, weighted toward recent attempts, discounted until it means something.</p>
+          <p class="muted mt-2">Per rule, weighted toward recent attempts, and held low until it means something.</p>
         </div>
       </div>
       <div class="container-prose mt-8">
         <p class="muted">
           You choose the length and the difficulty before every set. Nothing starts until
-          you have picked both, so a session is never a surprise.
+          you’ve picked both, so a session is never a surprise.
         </p>
       </div>
     </div>
@@ -193,7 +213,7 @@
       <h2 class="h2">Timed practice</h2>
       <p class="lead mt-4">
         A clock that matches real pacing, and an analysis afterwards of whether you were
-        rushing or labouring.
+        rushing or stalling.
       </p>
       <p class="muted mt-4">
         You can flag questions to revisit and see everything left blank before you submit,
@@ -209,12 +229,12 @@
       <h2 class="h2">Personalized learning</h2>
       <p class="lead mt-4">
         Adaptive practice tracks mastery per rule and keeps serving the ones you keep
-        missing, at the difficulty you are ready for.
+        missing, at the difficulty you’re ready for.
       </p>
       <p class="muted mt-4">
-        Mastery is not a raw percentage. It weights your recent attempts more heavily than
-        old ones and stays discounted until you have answered enough questions on a rule for
-        the number to mean anything — so a lucky run of three does not read as mastery.
+        Mastery is not a raw percentage. It weighs your recent attempts more heavily than
+        old ones, and stays low until you’ve answered enough questions on a rule for
+        the number to mean anything — so a lucky run of three doesn’t read as mastery.
       </p>
     </div>
   </section>
@@ -264,7 +284,7 @@
       <h2 class="h2">Achievements and streaks</h2>
       <p class="lead mt-4">Badges, a streak calendar, and a leaderboard you can opt out of entirely.</p>
       <p class="muted mt-4">
-        Streaks count days you practised, not questions you got right, so a bad day does not
+        Streaks count days you practiced, not questions you got right, so a bad day doesn’t
         break one. The leaderboard is opt-in and shows usernames only.
       </p>
     </div>
@@ -352,13 +372,13 @@
       </p>
       <p class="muted mt-4">
         The questions, the cheat sheets and the explanations are all original writing. If you
-        find a question that is wrong, ambiguous, or has two defensible answers, there is a
+        find a question that is wrong, ambiguous, or has two defensible answers, there’s a
         report button on every one of them — that feedback genuinely gets read, and items do
         get rewritten because of it.
       </p>
       <p class="muted mt-4">
-        Technically it is a plain static site over a Postgres database. Answer keys live on
-        the server rather than in the page, so you cannot read them out of the HTML — which
+        Technically it’s a plain static site over a Postgres database. Answer keys live on
+        the server rather than in the page, so you can’t read them out of the HTML — which
         would rather defeat the point.
       </p>
       <div class="hero__cta mt-8" style="justify-content:flex-start">

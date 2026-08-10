@@ -33,7 +33,7 @@ export function openFeedbackDialog(preset = {}) {
     body: h('div.stack', {},
       h('p.text-sm.muted', {},
         'This goes straight to the people who build the site. We record which page ' +
-        'you were on and your browser version so we do not have to ask.'),
+        'you were on and your browser version so we don’t have to ask.'),
       h('div.field', {}, h('label.label', { for: 'fb-kind' }, 'What kind of feedback?'), kindSelect),
       h('div.field', {}, h('label.label', { for: 'fb-subject' }, 'Subject'), subjectInput),
       h('div.field', {}, h('label.label', { for: 'fb-body' }, 'Details'), bodyInput)),

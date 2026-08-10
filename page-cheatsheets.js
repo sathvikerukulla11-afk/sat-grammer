@@ -17,7 +17,7 @@ try {
   sheets = await listCheatSheets();
 } catch {
   render($('#cs-index'), h('div.empty', {},
-    h('p.empty__title', {}, 'Cheat sheets are unavailable right now'),
+    h('p.empty__title', {}, 'We could’nt load the cheat sheets'),
     h('p', {}, 'Try again in a moment.')));
 }
 

@@ -27,6 +27,7 @@ const PUBLIC_NAV = [
 const PRIVATE_NAV = [
   { href: R.DASHBOARD, label: 'Dashboard' },
   { href: R.PRACTICE, label: 'Practice' },
+  { href: R.BANK, label: 'Question Bank' },
   { href: R.CHEATSHEETS, label: 'Cheat Sheets' },
   { href: R.RULES, label: 'Rules' },
   { href: R.REVIEW, label: 'Review' },
@@ -167,6 +168,7 @@ function buildFooter() {
             h('li', {}, h('a', { href: path(R.TIMED) }, 'Timed mode')),
             h('li', {}, h('a', { href: path(R.LEARN_MORE) }, 'How it works')),
             h('li', {}, h('a', { href: path(R.CHEATSHEETS) }, 'Cheat sheets')),
+            h('li', {}, h('a', { href: path(R.BANK) }, 'Question bank')),
             h('li', {}, h('a', { href: path(R.PRICING) }, 'Pricing')),
             h('li', {}, h('a', { href: path(R.RULES) }, 'Grammar rules')),
             h('li', {}, h('a', { href: path(R.REVIEW) }, 'Review missed'))

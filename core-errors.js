@@ -6,7 +6,7 @@
  */
 
 const AUTH_MESSAGES = {
-  'invalid_credentials': 'That email and password combination did not match an account.',
+  'invalid_credentials': 'That email and password don’t match an account.',
   'email_not_confirmed': 'Please confirm your email address first — check your inbox for the link.',
   'user_already_exists': 'An account already exists with that email. Try signing in instead.',
   'weak_password': 'Choose a longer password — at least 8 characters.',
@@ -18,10 +18,10 @@ const AUTH_MESSAGES = {
 
 const PG_MESSAGES = {
   '23505': 'That value is already taken.',
-  '23503': 'That reference does not exist.',
-  '23514': 'Some required information is missing or invalid.',
-  '42501': 'You do not have permission to do that.',
-  'P0002': 'We could not find what you were looking for.',
+  '23503': 'That item no longer exists.',
+  '23514': 'Something in that form is missing or invalid.',
+  '42501': 'You don’t have permission to do that.',
+  'P0002': 'We could’nt find what you were looking for.',
   'PGRST116': 'No matching record was found.',
   'PGRST301': 'Your session expired. Please sign in again.'
 };
@@ -51,7 +51,7 @@ export function friendlyMessage(error) {
   }
 
   if (error.message?.includes('Failed to fetch')) {
-    return 'Could not reach the server. Check your connection and try again.';
+    return 'Could’nt reach the server. Check your connection and try again.';
   }
 
   return 'Something went wrong. Please try again.';

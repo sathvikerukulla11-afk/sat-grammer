@@ -155,7 +155,7 @@ if (resumableTimed && resumableTimed.mode === 'timed') {
   config.seconds = Number(resumableTimed.config?.seconds_per_question) || config.seconds;
   const banner = h('div.alert.alert-info.mb-6', {},
     h('div', {},
-      h('strong', {}, 'You have an unfinished timed run. '),
+      h('strong', {}, 'You’ve got an unfinished timed run. '),
       `${resumableTimed.answered} of ${resumableTimed.total_questions} answered. `,
       h('div.text-sm.mt-1', {},
         'Your answers are saved. The clock restarts on the question you '
@@ -216,7 +216,7 @@ paint._lastIndex = 0;
 $('#end-session-btn').addEventListener('click', async () => {
   const confirmed = await confirmDialog({
     title: 'End the run?',
-    message: 'Your answers so far are saved. You will see the results screen.',
+    message: 'Your answers so far are saved. You’ll see the results screen.',
     confirmLabel: 'End run'
   });
   if (confirmed) runner.finish();

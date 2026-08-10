@@ -132,3 +132,36 @@ export async function getDailyResult(day = null) {
     .maybeSingle();
   return data;
 }
+
+/* ==========================================================================
+   Question Bank
+   ==========================================================================
+   Browsing is metadata only — the server never sends passage, stem or
+   choices to the list view, so a student cannot read ahead. Opening a
+   question builds an ordinary one-question session and hands it to the
+   SAME PracticeRunner the practice page uses, which is why there is no
+   second answering path to keep in sync.
+   ========================================================================== */
+
+export async function browseQuestions({
+  ruleIds = [], difficulties = [], status = null, limit = 50, afterNo = null
+} = {}) {
+  const { data, error } = await supabase.rpc('browse_questions', {
+    p_rule_ids: ruleIds.length ? ruleIds : null,
+    p_difficulties: difficulties.length ? difficulties : null,
+    p_status: status,
+    p_limit: limit,
+    p_after_no: afterNo
+  });
+  if (error) throw error;
+  return data;
+}
+
+/** Start a session from an explicit question list. Tier-gated server-side. */
+export async function startSessionFromQuestions(questionIds) {
+  const { data, error } = await supabase.rpc('start_session_from_questions', {
+    p_question_ids: questionIds
+  });
+  if (error) throw error;
+  return data;
+}

@@ -68,8 +68,8 @@ export function lockedScreen(cover, upgradeUrl) {
         h('div.cs-locked__icon', { 'aria-hidden': 'true' }, '🔒'),
         h('h2.cs-locked__title', {}, 'Premium Feature'),
         h('p.cs-locked__body', {},
-          'Unlock all Premium Cheat Sheets by upgrading. The free cheat sheet ' +
-          'for this rule stays free and is linked below.'),
+          'This is a premium cheat sheet. The free cheat sheet for this rule ' +
+          'stays free — it’s linked below.'),
         includes.length
           ? h('ul.cs-locked__list', { role: 'list' }, includes.map((i) => h('li', {}, i)))
           : null,

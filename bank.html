@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font-size="md">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Question Bank — SAT Grammar Lab</title>
+<meta name="description" content="Browse every question by grammar skill and difficulty, and pick the ones you want to work on.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://example.com/bank.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Question Bank — SAT Grammar Lab">
+<meta property="og:description" content="Browse every question by grammar skill and difficulty.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://esm.sh" crossorigin>
+<link rel="stylesheet" href="main.css">
+<script>(function(){try{var t=JSON.parse(localStorage.getItem('satgl.theme')||'"system"');var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.dataset.fontSize=JSON.parse(localStorage.getItem('satgl.fontSize')||'"md"');}catch(e){}})();</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<div id="site-header"></div>
+
+<main id="main" tabindex="-1">
+  <div class="container container-wide">
+
+    <!-- ============ BROWSE VIEW ============ -->
+    <div id="browse-view">
+      <div class="page-header mt-8">
+        <div>
+          <h1 class="page-header__title">Question Bank</h1>
+          <p class="page-header__sub">What do you want to practice?</p>
+        </div>
+      </div>
+
+      <!-- filters -->
+      <section class="card mt-6" aria-labelledby="h-filters">
+        <div class="row-between">
+          <h2 class="card__title" id="h-filters">Grammar skills</h2>
+          <div class="row-wrap">
+            <button class="btn btn-sm" type="button" id="select-all">Select all</button>
+            <button class="btn btn-sm" type="button" id="clear-all">Clear all</button>
+          </div>
+        </div>
+        <p class="field__help mt-2">
+          Pick the grammar skills you want to work on. Leave them all off to get everything.
+        </p>
+        <div class="mt-5" id="skill-picker">
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-text skeleton-line-70"></div>
+        </div>
+
+        <hr class="mt-6">
+
+        <div class="row-between mt-5">
+          <h2 class="card__title">Difficulty</h2>
+        </div>
+        <p class="field__help mt-2">
+          How hard should we make it? Leave it on All if you’re not sure.
+        </p>
+        <div class="row-wrap mt-3" id="difficulty-picker" role="group" aria-label="Difficulty">
+          <button class="chip" type="button" data-diff="all" aria-pressed="true">All</button>
+          <button class="chip" type="button" data-diff="easy" aria-pressed="false">Easy</button>
+          <button class="chip" type="button" data-diff="medium" aria-pressed="false">Medium</button>
+          <button class="chip" type="button" data-diff="hard" aria-pressed="false">Hard</button>
+          <button class="chip" type="button" data-diff="expert" aria-pressed="false">Expert</button>
+        </div>
+
+        <div class="row-between mt-5">
+          <h2 class="card__title">Show</h2>
+        </div>
+        <p class="field__help mt-2">Filter by what you’ve already done.</p>
+        <div class="row-wrap mt-3" id="status-picker" role="group" aria-label="Completion status">
+          <button class="chip" type="button" data-status="" aria-pressed="true">Everything</button>
+          <button class="chip" type="button" data-status="unattempted" aria-pressed="false">Not attempted</button>
+          <button class="chip" type="button" data-status="incorrect" aria-pressed="false">Got wrong</button>
+          <button class="chip" type="button" data-status="correct" aria-pressed="false">Got right</button>
+        </div>
+      </section>
+
+      <!-- progress + results -->
+      <div class="row-between mt-8">
+        <h2 class="h4" id="results-heading">Questions</h2>
+        <p class="text-sm muted" id="progress-line" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="mt-4" id="results"></div>
+
+      <div class="text-center mt-6">
+        <button class="btn" type="button" id="load-more" hidden>Load more</button>
+      </div>
+    </div>
+
+    <!-- ============ QUESTION VIEW ============
+         Rendered by the SAME renderQuestionCard the practice page uses. -->
+    <div id="question-view" hidden>
+      <div class="row-between mt-8">
+        <button class="btn btn-ghost" type="button" id="back-to-bank">← Back to Question Bank</button>
+        <span class="text-sm muted" id="question-crumb"></span>
+      </div>
+      <div class="mt-5" id="question-container"></div>
+    </div>
+
+  </div>
+</main>
+
+<div id="site-footer"></div>
+<script type="module" src="page-bank.js"></script>
+</body>
+</html>

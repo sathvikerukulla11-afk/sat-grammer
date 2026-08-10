@@ -42,7 +42,7 @@ const sorted = [...practiced].sort((a, b) => a.mastery - b.mastery);
 drawExtreme($('#weakest'), sorted.slice(0, 6),
   'Answer at least five questions in a rule and it shows up here.');
 drawExtreme($('#strongest'), sorted.slice(-6).reverse(),
-  'Nothing has reached a reliable level yet — that is normal early on.');
+  'Nothing has reached a reliable level yet — that’s normal early on.');
 
 function drawExtreme(container, rows, emptyMessage) {
   if (!rows.length) {
@@ -145,7 +145,7 @@ function drawInsights(analysis) {
       h('p.empty__title', {}, 'Not enough data yet'),
       h('p', {}, `You have answered ${analysis.attempts} question` +
                  `${analysis.attempts === 1 ? '' : 's'}. ` +
-                 'Around ten is where this starts telling you something you could not ' +
+                 'Around ten is where this starts telling you something you could’nt ' +
                  'have guessed.'),
       h('a.btn.btn-primary.mt-4', { href: 'practice.html?mode=mixed&difficulty=any&start=1' },
         'Answer a few more')));
@@ -169,7 +169,7 @@ function costlyRulesCard(rules) {
   return h('section.card', {},
     h('h3.h4', {}, 'Where you actually lose points'),
     h('p.text-sm.muted', {}, 'Ranked by questions missed, not by accuracy — a bad ' +
-      'percentage over three questions is not worth your afternoon.'),
+      'percentage over three questions is’nt worth your afternoon.'),
     rules?.length
       ? h('div.stack-sm.mt-5', {}, rules.map((rule) =>
           h('a.row-between', {
@@ -198,11 +198,11 @@ function pacingCard(pacing) {
     verdict = 'Not enough timing data yet.'; tone = null;
   } else if (gap < -5000) {
     verdict = 'You answer the ones you get wrong faster than the ones you get right. ' +
-              'That is the signature of a distractor that looked obviously correct — ' +
+              'That’s the sign of a wrong answer that looked obviously right — ' +
               'slow down on the ones that feel easy.';
     tone = 'danger';
   } else if (gap > 20000) {
-    verdict = 'You spend much longer on the ones you miss. You are recognising that ' +
+    verdict = 'You spend much longer on the ones you miss. You are recognizing that ' +
               'something is wrong but not what — which is a knowledge gap, not a pacing one.';
     tone = 'warning';
   } else {
@@ -211,7 +211,7 @@ function pacingCard(pacing) {
   }
 
   return h('section.card', {},
-    h('h3.h4', {}, 'Rushing or labouring?'),
+    h('h3.h4', {}, 'Rushing or stalling?'),
     h('div.grid.grid-2.mt-5', {},
       h('div.stat', {},
         h('span.stat__label', {}, 'When correct'),

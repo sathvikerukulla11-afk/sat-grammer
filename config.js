@@ -67,6 +67,7 @@ export const CONFIG = Object.freeze({
     REGISTER: 'register.html',
     DASHBOARD: 'dashboard.html',
     PRACTICE: 'practice.html',
+    BANK: 'bank.html',
     TIMED: 'timed.html',
     RULES: 'rules.html',
     CHEATSHEETS: 'cheatsheets.html',
@@ -87,6 +88,7 @@ export const CONFIG = Object.freeze({
   PROTECTED: Object.freeze([
     'dashboard.html', 'practice.html', 'timed.html', 'review.html',
     'progress.html', 'achievements.html', 'leaderboard.html', 'coach.html',
+    'bank.html',
     'profile.html', 'settings.html', 'admin.html'
   ]),
 

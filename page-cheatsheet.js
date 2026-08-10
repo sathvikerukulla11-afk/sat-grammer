@@ -39,22 +39,44 @@ if (data.locked) {
 const { rule, sheet, practice, progress, mastery, related, prev, next } = data;
 document.title = `${(sheet && sheet.title) || rule.name} — SAT Grammar Lab`;
 
-// Not every rule has a sheet written yet. Say so, rather than rendering
-// an elegant page with nothing in it.
-if (!sheet) {
+/* Some rules have no FREE sheet, only a premium deep-dive. Guard on a real
+   field rather than on `sheet` alone: the server used to send an object of
+   nulls here, which is truthy, and this page rendered a hollow sheet — "null
+   min" read time, empty sections — instead of taking this branch. The RPC
+   now sends null, and `!sheet.the_rule` keeps the page correct either way. */
+if (!sheet || !sheet.the_rule) {
+  const alt = data.premium_alternative;
+
   render($('#cs-body'),
-    h('div.cs-hero.mt-6', { dataset: { accent: 'blue' } },
-      h('div.cs-hero__icon', { 'aria-hidden': 'true' }, '📄'),
+    h('div.cs-hero.mt-6', { dataset: { accent: alt ? 'gold' : 'blue' } },
+      h('div.cs-hero__icon', { 'aria-hidden': 'true' }, alt?.icon || '📄'),
       h('h1.cs-hero__title', {}, rule.name),
       h('p.cs-hero__sub', {}, rule.summary)),
-    h('div.alert.alert-info.mt-6', {}, h('div', {},
-      h('strong', {}, 'The cheat sheet for this rule has not been written yet. '),
-      'The practice questions for it are ready, and the rule summary above is accurate.')),
-    h('div.row-wrap.mt-6', {},
-      h('a.btn.btn-primary', { href: `practice.html?rule=${rule.slug}&difficulty=any&start=1` },
-        'Practise this rule'),
+
+    alt
+      // Honest about what exists: there IS a sheet for this rule, it is the
+      // premium one. Cover-level detail only — the lesson stays gated.
+      ? h('div.cs-locked.mt-6', {},
+          h('div.cs-locked__icon', { 'aria-hidden': 'true' }, '🔒'),
+          h('h2.cs-locked__title', {}, 'This rule has a premium cheat sheet'),
+          h('p.cs-locked__body', {},
+            alt.teaser || alt.subtitle ||
+            'A full deep-dive on this rule is part of Premium.'),
+          h('div.row-wrap.mt-6', { style: { justifyContent: 'center' } },
+            h('a.btn.btn-premium.btn-lg', { href: UPGRADE_URL }, 'See what Premium adds'),
+            h('a.btn.btn-lg', {
+              href: `practice.html?rule=${rule.slug}&difficulty=any&start=1`
+            }, 'Practice this rule for free')))
+      : h('div.alert.alert-info.mt-6', {}, h('div', {},
+          h('strong', {}, 'The cheat sheet for this rule has not been written yet. '),
+          'The practice questions for it are ready, and the rule summary above is accurate.')),
+
+    h('div.row-wrap.mt-6', { style: { justifyContent: 'center' } },
+      alt ? null : h('a.btn.btn-primary', {
+        href: `practice.html?rule=${rule.slug}&difficulty=any&start=1`
+      }, 'Practice this rule'),
       h('a.btn', { href: 'cheatsheets.html' }, 'All cheat sheets')));
-  throw new Error('no sheet');
+  throw new Error('no free sheet');
 }
 
 document.documentElement.dataset.accent = sheet.accent;
@@ -176,7 +198,7 @@ const understand = h('button.cs-understand.mt-8', {
     this.replaceChildren(document.createTextNode(on ? '✓ You understand this rule' : "I understand this rule"));
     try {
       await setRuleProgress(rule.id, { completed: on });
-      if (on) toastSuccess('Marked as understood. Practise it to turn that into mastery.');
+      if (on) toastSuccess('Marked as understood. Practice it to turn that into mastery.');
     } catch { this.setAttribute('aria-pressed', String(!on)); }
   }
 }, progress?.completed_at ? '✓ You understand this rule' : 'I understand this rule');
@@ -193,6 +215,15 @@ render($('#cs-body'),
         h('span', { 'aria-hidden': 'true', style: { fontSize: '24px' } }, '💡'),
         h('span.cs-trick__line', {}, sheet.memory_trick)),
       sheet.trick_detail ? h('p.cs-trick__detail', {}, sheet.trick_detail) : null),
+
+    /* Knowing the rule and recognising the question that tests it are two
+       different skills. This section is the second one: what the item looks
+       like on the page. The server omits it from a locked payload along with
+       every other lesson field, so the guard is `sheet.how_to_spot` being
+       absent rather than any check here. */
+    sheet.how_to_spot
+      ? section('🔍', 'How to spot it on the SAT', h('p', {}, sheet.how_to_spot))
+      : null,
 
     section('✅', 'Correct examples',
       h('p.text-sm.muted', { style: { marginBottom: 'var(--space-4)' } },
@@ -228,7 +259,7 @@ render($('#cs-body'),
   h('div.row-wrap.mt-6', { style: { justifyContent: 'center' } },
     h('a.btn.btn-primary.btn-lg', {
       href: `practice.html?rule=${rule.slug}&difficulty=any&start=1`
-    }, `Practise this rule (${data.question_count} questions)`),
+    }, `Practice this rule (${data.question_count} questions)`),
     h('a.btn.btn-lg', { href: 'cheatsheets.html' }, 'All cheat sheets')),
 
   (related || []).length

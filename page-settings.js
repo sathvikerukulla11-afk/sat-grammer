@@ -146,7 +146,7 @@ $('#password-form').addEventListener('submit', async (event) => {
 
   const problem = validatePassword(next);
   if (problem) return toastError(problem);
-  if (next !== confirmValue) return toastError('The two passwords do not match.');
+  if (next !== confirmValue) return toastError('The two passwords don’t match.');
 
   try {
     await updatePassword(next);
@@ -167,7 +167,7 @@ $('#delete-account-btn').addEventListener('click', async () => {
   const confirmed = await confirmDialog({
     title: 'Delete your account?',
     message: 'This removes your profile, every attempt, and all statistics. ' +
-             'It cannot be undone. Consider exporting your data first.',
+             'It can’t be undone. Consider exporting your data first.',
     confirmLabel: 'Delete permanently',
     danger: true
   });
@@ -183,7 +183,7 @@ $('#delete-account-btn').addEventListener('click', async () => {
       { label: 'Cancel', value: false },
       { label: 'Delete my account', variant: 'btn-danger', async onClick() {
           if (input.value.trim() !== profile.username) {
-            toastError('That does not match your username.');
+            toastError('That doesn’t match your username.');
             return false;
           }
           try {

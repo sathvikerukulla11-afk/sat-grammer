@@ -55,7 +55,7 @@ async function draw() {
       const n = why.slice(6);
       return h('div.alert.alert-info.mt-4', {}, h('div', {},
         `You have answered ${mine} question${mine === 1 ? '' : 's'} this period. `,
-        h('strong', {}, `${n} more and you are on the board.`)));
+        h('strong', {}, `${n} more and you’re on the board.`)));
     }
     return h('div.alert.alert-info.mt-4', {}, h('div', {},
       'You qualify for this board — the standings refresh every few minutes.'));
