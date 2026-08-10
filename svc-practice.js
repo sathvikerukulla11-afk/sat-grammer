@@ -165,3 +165,23 @@ export async function startSessionFromQuestions(questionIds) {
   if (error) throw error;
   return data;
 }
+
+/**
+ * Start a session from the Question Bank's filters.
+ *
+ * Selection happens entirely on the server — the browser never receives the
+ * question ids, and the same WHERE clause backs both this and the count shown
+ * by browseQuestions(), so the two cannot drift apart.
+ */
+export async function startBankSession({
+  ruleIds = [], difficulties = [], status = null, limit = 10
+} = {}) {
+  const { data, error } = await supabase.rpc('start_bank_session', {
+    p_rule_ids: ruleIds.length ? ruleIds : null,
+    p_difficulties: difficulties.length ? difficulties : null,
+    p_status: status,
+    p_limit: limit
+  });
+  if (error) throw error;
+  return data;
+}
